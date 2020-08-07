@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Lib.RabbitMq
+namespace Core.Lib.RabbitMq.Abstractions
 {
     public interface IEventPublisher
     {

@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Core.Lib.RabbitMq.Abstractions;
+using MassTransit;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
