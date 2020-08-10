@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  identityserver:
+    image: identityserver:latest
+    build:
+      context: .
+      dockerfile: Services/Identity/IdentityServerAspNetIdentity/Dockerfile
+    environment:
+      ConnectionStrings:DefaultConnection: "Data Source=.;database=AuthServer;MultipleActiveResultSets=true;Integrated Security=True;"
+    #depends_on:
+      #- identity-db
+      #- externalnidserver
+    ports:
+      - 6005:80
+      - 6006:443
