@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Quickstart.Account
 {
@@ -151,19 +152,33 @@ namespace IdentityServer.Quickstart.Account
         [Route("api/register")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel viewModel)
         {
+            // Check if PhoneNumber already exists
+            var doesPhoneNumberAlreadyExist
+                = await _userManager.Users
+                .AnyAsync(item => item.PhoneNumber == viewModel.PhoneNumber);
+            if (doesPhoneNumberAlreadyExist)
+            {
+                return BadRequest(new
+                {
+                    Succeeded = false,
+                    Errors= new
+                    {
+                        Code= "DuplicatePhoneNumber",
+                        Description= $"PhoneNumber {viewModel.PhoneNumber} is already taken."
+                    }
+                });
+            }
+            
             var user = new ApplicationUser
             {
                 Email = viewModel.Email,
                 UserName = viewModel.UserName,
-                PhoneNumber = viewModel.PhoneNumber
-
+                PhoneNumber = viewModel.PhoneNumber,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                CountryId = viewModel.CountryId
             };
-            //var claimsToAdd = new List<Claim>() {
-            //    new Claim(ClaimTypes.GivenName, viewModel.FirstName),
-            //    new Claim(ClaimTypes.Surname, viewModel.LastName)
-            //};
 
-            
             var result= await _userManager.CreateAsync(user, viewModel.Password);
             return Ok(result);
         }
