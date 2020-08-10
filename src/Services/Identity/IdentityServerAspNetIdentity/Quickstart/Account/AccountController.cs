@@ -5,6 +5,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Lib.IntegrationEvents;
+using Core.Lib.RabbitMq.Abstractions;
 using IdentityModel;
 using IdentityServer.Models;
 using IdentityServer4.Events;
@@ -30,6 +32,7 @@ namespace IdentityServer.Quickstart.Account
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly IEventPublisher _eventPublisher;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -37,7 +40,7 @@ namespace IdentityServer.Quickstart.Account
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events, IEventPublisher eventPublisher)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,6 +48,7 @@ namespace IdentityServer.Quickstart.Account
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -180,6 +184,12 @@ namespace IdentityServer.Quickstart.Account
             };
 
             var result= await _userManager.CreateAsync(user, viewModel.Password);
+            if (result.Succeeded)
+            {
+                var createdUser= await _userManager.FindByNameAsync(viewModel.UserName);
+                await _eventPublisher.Publish(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id)));
+
+            }
             return Ok(result);
         }
         

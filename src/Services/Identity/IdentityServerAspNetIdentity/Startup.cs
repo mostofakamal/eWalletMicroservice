@@ -3,6 +3,7 @@
 
 
 using System.Reflection;
+using Core.Lib.RabbitMq;
 using IdentityServer.Data;
 using IdentityServer.Models;
 using IdentityServer.Quickstart;
@@ -35,7 +36,7 @@ namespace IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.RegisterQueueService(Configuration);
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
