@@ -1,3 +1,6 @@
+using Core.Lib.RabbitMq;
+using Kyc.API.Application.IntegrationEvents;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +26,8 @@ namespace Kyc.API
         {
             services.AddMvc();
             services.AddControllers();
+
+            services.RegisterQueueService(Configuration);
 
             services.AddSwaggerGen(c =>
             {

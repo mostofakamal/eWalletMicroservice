@@ -7,17 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="7.0.3" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.0.3" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.3" />
     <PackageReference Include="MediatR" Version="8.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\CoreLib\Core.Lib\Core.Lib.csproj" />
     <ProjectReference Include="..\Kyc.Domain\Kyc.Domain.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Application\IntegrationEvents\" />
-  </ItemGroup>
-
 </Project>
