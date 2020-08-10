@@ -81,6 +81,7 @@ namespace IdentityServer
                 app.UseDatabaseErrorPage();
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

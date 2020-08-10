@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-deployment
+  namespace: ewallet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identityserver
+  template:
+    metadata:
+      labels:
+        app: identityserver
+    spec:
+      containers:
+        - name: identityserver
+          image: identityserver:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          ports:
+            - name: http
+              containerPort: 80
+          
+          env:
+            - name: ConnectionStrings_DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: identitydb
+                  key: DbConnectionString
+
+            - name: QueueSettings_HostName
+              value: rabbit-release-rabbitmq
+            - name: QueueSettings_VirtualHost
+              value: /
+            - name: QueueSettings_UserName
+              value: user
+            - name: QueueSettings_Password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-release-rabbitmq
+                  key: rabbitmq-password
