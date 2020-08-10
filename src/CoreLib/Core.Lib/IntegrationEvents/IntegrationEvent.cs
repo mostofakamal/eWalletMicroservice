@@ -24,15 +24,4 @@ namespace Core.Lib.IntegrationEvents
         [JsonProperty]
         public DateTime CreationDate { get; private set; }
     }
-
-    public class UserCreatedIntegrationEvent : IntegrationEvent
-    {
-        public Guid UserGuid { get; }
-
-
-        public UserCreatedIntegrationEvent(Guid userGuid)
-        {
-            UserGuid = userGuid;
-        }
-    }
 }
