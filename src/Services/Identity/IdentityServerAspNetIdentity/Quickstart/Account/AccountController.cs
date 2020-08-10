@@ -5,6 +5,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Lib.IntegrationEvents;
+using Core.Lib.RabbitMq.Abstractions;
 using IdentityModel;
 using IdentityServer.Models;
 using IdentityServer4.Events;
@@ -16,6 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Quickstart.Account
 {
@@ -29,6 +32,7 @@ namespace IdentityServer.Quickstart.Account
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly IEventPublisher _eventPublisher;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -36,7 +40,7 @@ namespace IdentityServer.Quickstart.Account
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events, IEventPublisher eventPublisher)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,6 +48,7 @@ namespace IdentityServer.Quickstart.Account
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -151,20 +156,40 @@ namespace IdentityServer.Quickstart.Account
         [Route("api/register")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel viewModel)
         {
+            // Check if PhoneNumber already exists
+            var doesPhoneNumberAlreadyExist
+                = await _userManager.Users
+                .AnyAsync(item => item.PhoneNumber == viewModel.PhoneNumber);
+            if (doesPhoneNumberAlreadyExist)
+            {
+                return BadRequest(new
+                {
+                    Succeeded = false,
+                    Errors= new
+                    {
+                        Code= "DuplicatePhoneNumber",
+                        Description= $"PhoneNumber {viewModel.PhoneNumber} is already taken."
+                    }
+                });
+            }
+            
             var user = new ApplicationUser
             {
                 Email = viewModel.Email,
                 UserName = viewModel.UserName,
-                PhoneNumber = viewModel.PhoneNumber
-
+                PhoneNumber = viewModel.PhoneNumber,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                CountryId = viewModel.CountryId
             };
-            //var claimsToAdd = new List<Claim>() {
-            //    new Claim(ClaimTypes.GivenName, viewModel.FirstName),
-            //    new Claim(ClaimTypes.Surname, viewModel.LastName)
-            //};
 
-            
             var result= await _userManager.CreateAsync(user, viewModel.Password);
+            if (result.Succeeded)
+            {
+                var createdUser= await _userManager.FindByNameAsync(viewModel.UserName);
+                await _eventPublisher.Publish(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id)));
+
+            }
             return Ok(result);
         }
         

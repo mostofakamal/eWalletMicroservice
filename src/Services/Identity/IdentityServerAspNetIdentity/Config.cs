@@ -1,6 +1,5 @@
 ﻿
 using System.Collections.Generic;
-using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace IdentityServer
@@ -17,9 +16,35 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("scope1"),
-                new ApiScope("scope2"),
+                new ApiScope(Scopes.Kyc),
+                new ApiScope(Scopes.Transaction),
+                new ApiScope(Scopes.Reward),
+                new ApiScope(Scopes.Notification)
             };
+        public static IEnumerable<ApiResource> GetApis()
+        {
+            return new List<ApiResource>
+            {
+                new ApiResource(Scopes.Kyc, "Kyc Service")
+                {
+                    Scopes = { Scopes.Kyc }
+                },
+                new ApiResource(Scopes.Transaction, "Transaction Service")
+                {
+                    Scopes = { Scopes.Transaction }
+                },
+                new ApiResource(Scopes.Reward, "Reward Service")
+                {
+                    Scopes = { Scopes.Reward }
+                },
+                new ApiResource(Scopes.Notification, "Notification Service")
+                {
+                    Scopes = { Scopes.Notification }
+                },
+
+            };
+        }
+
 
         public static IEnumerable<Client> Clients =>
             new Client[]
@@ -37,15 +62,23 @@ namespace IdentityServer
                     PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
 
                     AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "scope2" }
+                    AllowedScopes = { "openid", "profile", Scopes.Kyc,Scopes.Transaction,Scopes.Reward,Scopes.Notification }
                 },
                 new Client
                 {
-                    ClientId = "testClient",
-                    ClientSecrets = new [] { new Secret("testSecret".Sha512()) },
+                    ClientId = "ewalletclient",
+                    ClientSecrets = new [] { new Secret("ewalletSecret".Sha512()) },
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-                    AllowedScopes = { IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile , "testapi" }
+                    AllowedScopes = { Scopes.Kyc,Scopes.Transaction,Scopes.Reward,Scopes.Notification}
                 },
             };
+    }
+
+    public class Scopes
+    {
+        public const string Kyc = "kyc";
+        public const string Transaction = "transaction";
+        public const string Reward = "reward";
+        public const string Notification = "notification";
     }
 }

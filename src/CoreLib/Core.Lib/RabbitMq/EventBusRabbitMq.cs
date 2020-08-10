@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System;
+using Core.Lib.RabbitMq.Abstractions;
 
 namespace Core.Lib.RabbitMq
 {
@@ -35,6 +36,7 @@ namespace Core.Lib.RabbitMq
             services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IHostedService, EventBusHostedService>();
+            services.AddSingleton<IEventPublisher, EventPublisher>();
 
             return services;
         }
