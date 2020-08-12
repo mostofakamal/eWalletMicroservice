@@ -1,4 +1,7 @@
+using Core.Lib.IntegrationEvents;
 using Core.Lib.RabbitMq;
+using Core.Lib.RabbitMq.Abstractions;
+using Core.Lib.RabbitMq.Configs;
 using Kyc.API.Application.IntegrationEvents;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace Kyc.API
 {
@@ -27,7 +31,28 @@ namespace Kyc.API
             services.AddMvc();
             services.AddControllers();
 
-            services.RegisterQueueService(Configuration);
+
+            var appSettingsSection = Configuration.GetSection("QueueSettings");
+            var appSettings = appSettingsSection.Get<QueueSettings>();
+            services.Configure<QueueSettings>(appSettingsSection);
+            services.AddSingleton<QueueSettings>(appSettings);
+
+            services.AddScoped<UserCreatedIntegratedEventConsumer>();
+
+            //services.RegisterQueueService(Configuration);
+
+            services.AddMassTransit(config =>
+            {
+                config.AddConsumer<UserCreatedIntegratedEventConsumer>();
+
+                config.AddBus(EventBusRabbitMq.ConfigureBus);
+            });
+
+            services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<IHostedService, EventBusHostedService>();
+            services.AddSingleton<IEventPublisher, EventPublisher>();
 
             services.AddSwaggerGen(c =>
             {

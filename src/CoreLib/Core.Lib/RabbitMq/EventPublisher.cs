@@ -15,7 +15,7 @@ namespace Core.Lib.RabbitMq
         {
             _endpoint = endpoint;
         }
-        public async Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : IntegrationEvent
+        public async Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
             await this._endpoint.Publish<T>(message);
         }

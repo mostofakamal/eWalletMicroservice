@@ -2,10 +2,9 @@
 
 namespace Core.Lib.IntegrationEvents
 {
-    public class UserCreatedIntegrationEvent : IntegrationEvent
+    public class UserCreatedIntegrationEvent :  IUserCreatedIntegrationEvent
     {
         public Guid UserGuid { get; }
-
 
         public UserCreatedIntegrationEvent(Guid userGuid)
         {

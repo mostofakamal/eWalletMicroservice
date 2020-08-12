@@ -14,6 +14,7 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,7 @@ namespace IdentityServer.Quickstart.Account
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IPublishEndpoint endpoint;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -40,7 +42,9 @@ namespace IdentityServer.Quickstart.Account
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events, IEventPublisher eventPublisher)
+            IEventService events, 
+            IEventPublisher eventPublisher,
+            IPublishEndpoint endpoint)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -49,6 +53,7 @@ namespace IdentityServer.Quickstart.Account
             _schemeProvider = schemeProvider;
             _events = events;
             _eventPublisher = eventPublisher;
+            this.endpoint = endpoint;
         }
 
         /// <summary>
@@ -187,8 +192,7 @@ namespace IdentityServer.Quickstart.Account
             if (result.Succeeded)
             {
                 var createdUser= await _userManager.FindByNameAsync(viewModel.UserName);
-                await _eventPublisher.Publish(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id)));
-
+                await endpoint.Publish<IUserCreatedIntegrationEvent>(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id)));
             }
             return Ok(result);
         }

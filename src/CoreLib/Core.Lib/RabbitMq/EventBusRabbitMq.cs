@@ -11,6 +11,9 @@ using Core.Lib.RabbitMq.Abstractions;
 using MassTransit.RabbitMqTransport;
 using System.Linq;
 using Core.Lib.IntegrationEvents;
+using MassTransit.Internals.Extensions;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Core.Lib.RabbitMq
 {
@@ -22,6 +25,7 @@ namespace Core.Lib.RabbitMq
         {
             var appSettingsSection = configuration.GetSection("QueueSettings");
             QueueSettings = appSettingsSection.Get<QueueSettings>();
+
             services.AddSingleton(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 cfg.Host(QueueSettings.HostName, QueueSettings.VirtualHost,
@@ -32,19 +36,6 @@ namespace Core.Lib.RabbitMq
                      });
 
                 cfg.ExchangeType = ExchangeType.Direct;
-
-                cfg.ReceiveEndpoint("customer-registered-kyc-endpoint", e =>
-                {
-                    var type = typeof(IConsumer<UserCreatedIntegrationEvent>);
-                    var types = AppDomain.CurrentDomain.GetAssemblies()
-                        .SelectMany(s => s.GetTypes())
-                        .Where(p => type.IsAssignableFrom(p));
-
-                    foreach (var consumerType in types)
-                    {
-                        e.Consumer(consumerType, type => Activator.CreateInstance(consumerType));
-                    }
-                });
             }));
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
@@ -54,6 +45,22 @@ namespace Core.Lib.RabbitMq
             services.AddSingleton<IEventPublisher, EventPublisher>();
 
             return services;
+        }
+
+        public static IBusControl ConfigureBus(IServiceProvider provider)
+        {
+            var queueSettings = provider.GetRequiredService<QueueSettings>();
+
+            var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+            {
+                cfg.Host(queueSettings.HostName, queueSettings.VirtualHost, h =>
+                {
+                    h.Username(queueSettings.UserName);
+                    h.Password(queueSettings.Password);
+                });
+                cfg.ConfigureEndpoints(provider);
+            });
+            return busControl;
         }
     }
 }
