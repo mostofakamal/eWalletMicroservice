@@ -13,14 +13,26 @@ namespace Kyc.Domain.AggregateModel
         public string NID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+       
+        public short KycStatusId { get; set; }
+        public KycStatus KycStatus { get; set; }
+        
+        public Guid UserId { get; set; }
+        public User User { get; set; }
 
-        public KycInformation(string userId, string NID, string firstName, string lastName)
+        public KycInformation()
+        {
+
+        }
+
+        public KycInformation(Guid userId, string NID, string firstName, string lastName, KycStatuses kycStatus)
         {
             this.NID = NID;
             this.FirstName = firstName;
             this.LastName = lastName;
-
-            var kycStartedDomainEvent = new KycStartedDomainEvent(this,userId, NID, firstName,lastName);
+            this.UserId = userId;
+            this.KycStatusId = (short)kycStatus;
+            var kycStartedDomainEvent = new KycSubmittedDomainEvent(this, userId, NID, firstName,lastName);
             this.AddDomainEvent(kycStartedDomainEvent);
         }
     }

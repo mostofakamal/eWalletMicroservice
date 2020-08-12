@@ -10,8 +10,8 @@ namespace Kyc.Domain.SeedWork
         private List<INotification> _domainEvents;
         public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
 
-        int _Id;
-        public virtual int Id
+        Guid _Id;
+        public virtual Guid Id
         {
             get { return _Id; }
             protected set { _Id = value; }
@@ -36,7 +36,7 @@ namespace Kyc.Domain.SeedWork
 
         public bool IsTransient()
         {
-            return this.Id == default(Int32);
+            return this.Id == default(Guid);
         }
 
         public override bool Equals(object obj)

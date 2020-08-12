@@ -12,8 +12,4 @@
     <ProjectReference Include="..\Kyc.Domain\Kyc.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EntityConfigurations\" />
-  </ItemGroup>
-
 </Project>

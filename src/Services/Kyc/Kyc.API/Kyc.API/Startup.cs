@@ -1,16 +1,11 @@
-using Core.Lib.IntegrationEvents;
-using Core.Lib.RabbitMq;
-using Core.Lib.RabbitMq.Abstractions;
 using Core.Lib.RabbitMq.Configs;
-using Kyc.API.Application.IntegrationEvents;
-using MassTransit;
+using Kyc.API.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 
 namespace Kyc.API
 {
@@ -28,36 +23,23 @@ namespace Kyc.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
-
 
             var appSettingsSection = Configuration.GetSection("QueueSettings");
             var appSettings = appSettingsSection.Get<QueueSettings>();
             services.Configure<QueueSettings>(appSettingsSection);
             services.AddSingleton<QueueSettings>(appSettings);
 
-            services.AddScoped<UserCreatedIntegratedEventConsumer>();
-
-            //services.RegisterQueueService(Configuration);
-
-            services.AddMassTransit(config =>
-            {
-                config.AddConsumer<UserCreatedIntegratedEventConsumer>();
-
-                config.AddBus(EventBusRabbitMq.ConfigureBus);
-            });
-
-            services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
-            services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
-            services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
-            services.AddSingleton<IHostedService, EventBusHostedService>();
-            services.AddSingleton<IEventPublisher, EventPublisher>();
-
+            services.ConfigQueue();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kyc Service", Version = "v1" });
             });
+
+            services.RegisterDbAccess(Configuration);
+
+            services.ConfigureAppServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +60,9 @@ namespace Kyc.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kyc Service V1");
                 c.RoutePrefix = "";
             });
+
+            app.InitializeDatabase();
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

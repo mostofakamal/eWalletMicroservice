@@ -1,13 +1,12 @@
 ﻿using Kyc.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kyc.API.Application.DomainEventHandlers
 {
-    public class KycSubmittedDomainEventHandler : INotificationHandler<KycStartedDomainEvent>
+    public class KycSubmittedDomainEventHandler : INotificationHandler<KycSubmittedDomainEvent>
     {
         private readonly ILogger<KycSubmittedDomainEventHandler> logger;
 
@@ -15,7 +14,7 @@ namespace Kyc.API.Application.DomainEventHandlers
         {
             this.logger = logger;
         }
-        public async Task Handle(KycStartedDomainEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(KycSubmittedDomainEvent notification, CancellationToken cancellationToken)
         {
             this.logger.Log(LogLevel.Information, $"Value: {notification.FirstName}, {notification.LastName}");
         }

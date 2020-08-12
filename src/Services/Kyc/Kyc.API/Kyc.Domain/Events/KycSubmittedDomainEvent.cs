@@ -1,18 +1,19 @@
 ﻿using Kyc.Domain.AggregateModel;
 using MediatR;
+using System;
 
 namespace Kyc.Domain.Events
 {
-    public class KycStartedDomainEvent : INotification
+    public class KycSubmittedDomainEvent : INotification
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public string NID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
         public KycInformation KycAggregateModel { get; }
 
-        public KycStartedDomainEvent(KycInformation kyc, string userId, string NID, string firstName, string lastName)
+        public KycSubmittedDomainEvent(KycInformation kyc, Guid userId, string NID, string firstName, string lastName)
         {
             this.KycAggregateModel = kyc;
             this.UserId = userId;

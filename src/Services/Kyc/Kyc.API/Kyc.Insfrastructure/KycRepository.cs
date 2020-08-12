@@ -23,6 +23,12 @@ namespace Kyc.Insfrastructure
             return added.Entity;
         }
 
+        public async Task<User> Add(User user)
+        {
+            var added = await _context.Users.AddAsync(user);
+            return added.Entity;
+        }
+
         public async Task<KycInformation> Get(string kycId)
         {
             return await _context.Kycs.FindAsync(kycId);

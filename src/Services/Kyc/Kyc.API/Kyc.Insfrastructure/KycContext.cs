@@ -1,5 +1,6 @@
 ﻿using Kyc.Domain.AggregateModel;
 using Kyc.Domain.SeedWork;
+using Kyc.Insfrastructure.EntityConfigurations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,8 +14,10 @@ namespace Kyc.Insfrastructure
         private readonly IMediator _mediator;
 
         public DbSet<KycInformation> Kycs { get; set; }
+        public DbSet<KycStatus> KycStatuses { get; set; }
+        public DbSet<User> Users { get; set; }
 
-        public KycContext(IMediator mediator)
+        public KycContext(IMediator mediator, DbContextOptions options) : base(options)
         {
             this._mediator = mediator;
         }
@@ -28,6 +31,14 @@ namespace Kyc.Insfrastructure
             var result = await base.SaveChangesAsync(cancellationToken);
 
             return true;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new KycStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new KycInformationConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
