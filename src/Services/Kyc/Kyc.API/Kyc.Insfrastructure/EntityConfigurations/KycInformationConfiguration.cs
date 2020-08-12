@@ -8,7 +8,6 @@ namespace Kyc.Insfrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<KycInformation> builder)
         {
-            builder.Property(x=> x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.FirstName).IsRequired().HasMaxLength(100);
             builder.Property(x => x.LastName).IsRequired().HasMaxLength(100);
             builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);

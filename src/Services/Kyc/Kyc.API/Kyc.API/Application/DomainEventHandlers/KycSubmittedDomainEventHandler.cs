@@ -14,6 +14,7 @@ namespace Kyc.API.Application.DomainEventHandlers
         {
             this.logger = logger;
         }
+
         public async Task Handle(KycSubmittedDomainEvent notification, CancellationToken cancellationToken)
         {
             this.logger.Log(LogLevel.Information, $"Value: {notification.FirstName}, {notification.LastName}");
