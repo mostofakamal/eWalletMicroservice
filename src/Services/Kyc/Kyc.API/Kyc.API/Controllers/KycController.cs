@@ -9,7 +9,6 @@ namespace Kyc.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class KycController : ControllerBase
     {
         private readonly ILogger<KycController> _logger;

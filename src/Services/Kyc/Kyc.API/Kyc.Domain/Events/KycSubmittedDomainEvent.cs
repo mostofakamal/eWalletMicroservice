@@ -19,6 +19,7 @@ namespace Kyc.Domain.Events
             this.FirstName = firstName;
             this.LastName = lastName;
             this.KycId = kyc.Id;
+            this.NID = NID;
         }
     }
 }

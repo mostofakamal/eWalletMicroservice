@@ -29,7 +29,7 @@ namespace Kyc.Insfrastructure
             return added.Entity;
         }
 
-        public async Task<KycInformation> Get(string kycId)
+        public async Task<KycInformation> Get(Guid kycId)
         {
             return await _context.Kycs.FindAsync(kycId);
         }

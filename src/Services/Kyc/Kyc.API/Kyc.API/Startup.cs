@@ -1,6 +1,8 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using Core.Lib.IdentityServer;
 using Core.Lib.RabbitMq.Configs;
+using Kyc.API.Application.Services;
 using Kyc.API.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -61,6 +63,11 @@ namespace Kyc.API
                             ValidAudiences = new[] { "kyc" }
                         };
                     });
+
+            services.AddHttpClient<IExternalKycVerifier, ExternalKycVerifier>(x =>
+            {
+                x.BaseAddress = new Uri(Configuration["NIDServerUrl"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
