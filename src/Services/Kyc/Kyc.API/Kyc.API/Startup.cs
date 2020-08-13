@@ -55,6 +55,11 @@ namespace Kyc.API
                         options.Authority = Configuration["IdentityServerUrl"];
                         options.Audience = "kyc";
                         options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                        {
+                            ValidateIssuer = false,
+                            ValidAudiences = new[] { "kyc" }
+                        };
                     });
         }
 
