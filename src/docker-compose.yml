@@ -26,14 +26,3 @@ services:
       #- externalnidserver
     ports:
       - 80:80
-  externalnidserver:
-    container_name: externalnidserver
-    image: vimagick/json-server
-    command: -H 0.0.0.0 -p 80 -w db.json
-    ports:
-      - "3000:80"
-    volumes:
-      - ./nid_data:/data
-    restart: always
-volumes:
-  sqlvolume:

@@ -1,29 +1,27 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kycservice
+  name: nidserver
   namespace: ewallet
 spec:
   selector:
-    app: kycservice
+    app: nid-server
   ports:
     - port: 80
       targetPort: 80
   type: ClusterIP
 
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kycservice-ex
+  name: nidserver-ex
   namespace: ewallet
 spec:
   selector:
-    app: kycservice
+    app: nid-server
   ports:
-    - port: 8087
+    - port: 3001
       targetPort: 80
   type: LoadBalancer
-
-

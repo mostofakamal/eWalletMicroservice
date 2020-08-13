@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nid-server-deployment
+  namespace: ewallet
+  labels:
+    app: nid-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nid-server
+  template:
+    metadata:
+      labels:
+        app: nid-server
+    spec:
+      containers:
+      - name: nid-server
+        image: clue/json-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: json-server-volume
+          mountPath: /data
+      volumes:
+      - name: json-server-volume
+        configMap:
+          name: json-server-config
