@@ -7,10 +7,33 @@ services:
       context: .
       dockerfile: Services/Identity/IdentityServerAspNetIdentity/Dockerfile
     environment:
-      ConnectionStrings:DefaultConnection: "Data Source=.;database=AuthServer;MultipleActiveResultSets=true;Integrated Security=True;"
+      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=AuthServer;MultipleActiveResultSets=true;"
     #depends_on:
       #- identity-db
       #- externalnidserver
     ports:
-      - 6005:80
-      - 6006:443
+      - 80:80
+      - 443:443
+  kycservice:
+    image: kycservice:latest
+    build:
+      context: .
+      dockerfile: Services/Kyc/Kyc.API/Kyc.API/Dockerfile
+    environment:
+      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=AuthServer;MultipleActiveResultSets=true;"
+    #depends_on:
+      #- identity-db
+      #- externalnidserver
+    ports:
+      - 80:80
+  externalnidserver:
+    container_name: externalnidserver
+    image: vimagick/json-server
+    command: -H 0.0.0.0 -p 80 -w db.json
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nid_data:/data
+    restart: always
+volumes:
+  sqlvolume:

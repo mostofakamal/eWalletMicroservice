@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kycservice-deployment
+  namespace: ewallet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kycservice
+  template:
+    metadata:
+      labels:
+        app: kycservice
+    spec:
+      containers:
+        - name: kycservice
+          image: kycservice:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          ports:
+            - name: http
+              containerPort: 80

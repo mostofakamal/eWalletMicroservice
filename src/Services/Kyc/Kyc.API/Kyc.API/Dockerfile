@@ -1,16 +1,20 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Kyc.API/Kyc.API.csproj", "Kyc.API/"]
-RUN dotnet restore "Kyc.API/Kyc.API.csproj"
+COPY ["Services/Kyc/Kyc.API/Kyc.API/Kyc.API.csproj", "Services/Kyc/Kyc.API/Kyc.API/"]
+COPY ["Services/Kyc/Kyc.API/Kyc.Domain/Kyc.Domain.csproj", "Services/Kyc/Kyc.API/Kyc.Domain/"]
+COPY ["Services/Kyc/Kyc.API/Kyc.Insfrastructure/Kyc.Insfrastructure.csproj", "Services/Kyc/Kyc.API/Kyc.Insfrastructure/"]
+COPY ["CoreLib/Core.Lib/Core.Lib.csproj", "CoreLib/Core.Lib/"]
+RUN dotnet restore "Services/Kyc/Kyc.API/Kyc.API/Kyc.API.csproj"
 COPY . .
-WORKDIR "/src/Kyc.API"
+WORKDIR "/src/Services/Kyc/Kyc.API/Kyc.API"
+
 RUN dotnet build "Kyc.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
@@ -18,5 +22,6 @@ RUN dotnet publish "Kyc.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Kyc.API.dll"]
