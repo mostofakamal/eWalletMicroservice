@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: kycservicedbdeployment
+  namespace: ewallet
+
+spec:
+  selector:
+    matchLabels:
+      app: kycservicedbdeployment
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: kycservicedbdeployment
+    spec:
+      terminationGracePeriodSeconds: 10
+
+      containers:
+        - name: kycservice-db
+
+          image: microsoft/mssql-server-linux:2017-latest
+
+          ports:
+            - containerPort: 1433
+
+          env:
+            - name: ACCEPT_EULA
+
+              value: "Y"
+
+            - name: SA_PASSWORD
+
+              valueFrom:
+                secretKeyRef:
+                  name: kycsrvicedb
+                  key: SA_PASSWORD
+
+      volumes:
+        - name: kycservice-db-persistent-storage
+          persistentVolumeClaim:
+            claimName: kycservice-db-data-claim
+      restartPolicy: Always

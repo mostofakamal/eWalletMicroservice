@@ -24,3 +24,21 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          env:
+                - name: ConnectionStrings_DefaultConnection
+                  valueFrom:
+                    secretKeyRef:
+                      name: identitydb
+                      key: DbConnectionString
+
+                - name: QueueSettings_HostName
+                  value: rabbit-release-rabbitmq
+                - name: QueueSettings_VirtualHost
+                  value: /
+                - name: QueueSettings_UserName
+                  value: user
+                - name: QueueSettings_Password
+                  valueFrom:
+                    secretKeyRef:
+                      name: rabbit-release-rabbitmq
+                      key: rabbitmq-password

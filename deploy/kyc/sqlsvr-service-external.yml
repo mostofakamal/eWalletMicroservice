@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kycservice-db-external
+  namespace: ewallet
+spec:
+  selector:
+    app: kycservicedbdeployment
+  ports:
+    - protocol: TCP
+      port: 2510
+      targetPort: 1433
+  type: LoadBalancer
