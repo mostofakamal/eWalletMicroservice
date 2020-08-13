@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityServer
 {
@@ -73,7 +74,7 @@ namespace IdentityServer
             services.AddAuthentication();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
             if (Environment.IsDevelopment())
             {
@@ -87,7 +88,7 @@ namespace IdentityServer
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
-            InitializeDatabase(app);
+            InitializeDatabase(app,logger);
 
             app.UseEndpoints(endpoints =>
             {
@@ -95,8 +96,9 @@ namespace IdentityServer
             });
         }
 
-        private void InitializeDatabase(IApplicationBuilder app)
+        private void InitializeDatabase(IApplicationBuilder app,ILogger<Startup> logger)
         {
+            logger.LogInformation("ConnectionString: "+ Configuration.GetConnectionString("DefaultConnection"));
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
