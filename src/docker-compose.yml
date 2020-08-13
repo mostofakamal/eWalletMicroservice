@@ -9,8 +9,8 @@ services:
     environment:
       ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=AuthServer;MultipleActiveResultSets=true;"
     #depends_on:
-      #- identity-db
-      #- externalnidserver
+    #- identity-db
+    #- externalnidserver
     ports:
       - 80:80
       - 443:443
@@ -22,7 +22,14 @@ services:
     environment:
       ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=AuthServer;MultipleActiveResultSets=true;"
     #depends_on:
-      #- identity-db
-      #- externalnidserver
+    #- identity-db
+    #- externalnidserver
     ports:
       - 80:80
+  apigw:
+    image: apigw:latest
+    build:
+      context: .
+      dockerfile: ApiGateways/ApiGateway/Dockerfile
+volumes:
+  sqlvolume:
