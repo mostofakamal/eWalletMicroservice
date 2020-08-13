@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Core.Lib.IdentityServer;
 using Core.Lib.RabbitMq.Configs;
 using Kyc.API.Infrastructure;
@@ -47,11 +48,11 @@ namespace Kyc.API
             services.RegisterDbAccess(Configuration);
 
             services.ConfigureAppServices();
-
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
-                        options.Authority = "http://localhost:5010";
+                        options.Authority = Configuration["IdentityServerUrl"];
                         options.Audience = "kyc";
                         options.RequireHttpsMetadata = false;
                     });
@@ -66,6 +67,7 @@ namespace Kyc.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseMvc();
             app.UseSwagger();
 
