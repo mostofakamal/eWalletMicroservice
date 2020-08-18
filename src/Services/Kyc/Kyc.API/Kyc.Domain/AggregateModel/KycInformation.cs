@@ -1,29 +1,22 @@
 ﻿using Kyc.Domain.Events;
-using Kyc.Domain.SeedWork;
 using System;
-using System.Collections.Generic;
-using System.Net.Mail;
-using System.Text;
 
 namespace Kyc.Domain.AggregateModel
 {
-    public class KycInformation : Entity, IAggregateRoot
+    public class KycInformation 
     {
+        public Guid Id { get; set; }
+        public string NID { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
 
-        public string NID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-       
-        public short KycStatusId { get; set; }
-        public KycStatus KycStatus { get; set; }
-        
+        public short KycStatusId { get; private set; }
+        public KycStatus KycStatus { get; private set; }
+
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        public User User { get; private set; }
 
-        public KycInformation()
-        {
-
-        }
+        public KycInformation() { }
 
         public KycInformation(Guid userId, string NID, string firstName, string lastName, KycStatuses kycStatus)
         {
@@ -33,8 +26,11 @@ namespace Kyc.Domain.AggregateModel
             this.LastName = lastName;
             this.UserId = userId;
             this.KycStatusId = (short)kycStatus;
-            var kycStartedDomainEvent = new KycSubmittedDomainEvent(this, NID, firstName,lastName);
-            this.AddDomainEvent(kycStartedDomainEvent);
+        }
+
+        public void SetStatus(short kycStatusId)
+        {
+            this.KycStatusId = kycStatusId;
         }
     }
 }
