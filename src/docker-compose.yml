@@ -20,12 +20,22 @@ services:
       context: .
       dockerfile: Services/Kyc/Kyc.API/Kyc.API/Dockerfile
     environment:
-      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=AuthServer;MultipleActiveResultSets=true;"
+      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=Kyc-db;MultipleActiveResultSets=true;"
     #depends_on:
     #- identity-db
     #- externalnidserver
     ports:
       - 80:80
+
+  transactionservice:
+    image: transactionservice:latest
+    build:
+      context: .
+      dockerfile: Services/Transaction/Transaction.API/Dockerfile
+    environment:
+      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=transaction-db;MultipleActiveResultSets=true;"
+    ports:
+      - 6012:80
   apigw:
     image: apigw:latest
     build:

@@ -15,6 +15,38 @@
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": [ "kyc" ]
       }
+    },
+    {
+      "DownstreamPathTemplate": "/transactions/transfers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "transactionservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/transactions/transfers",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": [ "transaction" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/transactions/balance",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "transactionservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/transactions/balance",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": [ "transaction" ]
+      }
     }
   ],
   "GlobalConfiguration": {

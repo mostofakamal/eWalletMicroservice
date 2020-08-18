@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Core.Lib.IdentityServer
+﻿namespace Core.Lib.Services
 {
     public interface IIdentityService
     {

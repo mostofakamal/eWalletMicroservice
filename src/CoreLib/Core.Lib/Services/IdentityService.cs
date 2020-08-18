@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 
-namespace Core.Lib.IdentityServer
+namespace Core.Lib.Services
 {
     public class IdentityService : IIdentityService
     {

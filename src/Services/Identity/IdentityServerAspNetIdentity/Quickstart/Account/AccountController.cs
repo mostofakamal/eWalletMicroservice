@@ -192,7 +192,7 @@ namespace IdentityServer.Quickstart.Account
             if (result.Succeeded)
             {
                 var createdUser= await _userManager.FindByNameAsync(viewModel.UserName);
-                await endpoint.Publish<IUserCreatedIntegrationEvent>(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id)));
+                await endpoint.Publish<IUserCreatedIntegrationEvent>(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id),viewModel.CountryId,viewModel.PhoneNumber));
             }
             return Ok(result);
         }
