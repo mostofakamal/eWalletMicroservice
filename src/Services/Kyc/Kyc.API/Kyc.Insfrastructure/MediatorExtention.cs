@@ -10,7 +10,7 @@ namespace Kyc.Insfrastructure
 {
     static class MediatorExtention
     {
-        public static async Task DispatchDomainEventsAsync(this IMediator mediator, KycContext ctx)
+        public static async Task DispatchDomainEventsAsync(this IMediator mediator, UserContext ctx)
         {
             var domainEntities = ctx.ChangeTracker
                 .Entries<Entity>()

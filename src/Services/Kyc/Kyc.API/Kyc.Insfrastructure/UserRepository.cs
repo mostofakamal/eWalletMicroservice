@@ -1,18 +1,20 @@
 ﻿using Kyc.Domain.AggregateModel;
 using Kyc.Domain.SeedWork;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kyc.Insfrastructure
 {
-    public class KycRepository : IKycRepository
+    public class UserRepository : IUserRepository
     {
-        private readonly KycContext _context;
+        private readonly UserContext _context;
 
         public IUnitOfWork UnitOfWork { get { return _context; } }
 
 
-        public KycRepository(KycContext kycContext)
+        public UserRepository(UserContext kycContext)
         {
             _context = kycContext;
         }
@@ -29,9 +31,12 @@ namespace Kyc.Insfrastructure
             return added.Entity;
         }
 
-        public async Task<KycInformation> Get(Guid kycId)
+        public async Task<User> Get(Guid userId)
         {
-            return await _context.Kycs.FindAsync(kycId);
+            return await _context.Users
+                .Include(k => k.KycInformations)
+                .Include(u => u.Country)
+                .Where(x => x.Id == userId).FirstOrDefaultAsync();
         }
     }
 }

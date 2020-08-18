@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 
 namespace Kyc.Insfrastructure
 {
-    public class KycContext : DbContext, IUnitOfWork
+    public class UserContext : DbContext, IUnitOfWork
     {
         private readonly IMediator _mediator;
 
         public DbSet<KycInformation> Kycs { get; set; }
         public DbSet<KycStatus> KycStatuses { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
-        public KycContext(IMediator mediator, DbContextOptions options) : base(options)
+        public UserContext(IMediator mediator, DbContextOptions options) : base(options)
         {
             this._mediator = mediator;
         }
@@ -25,7 +26,6 @@ namespace Kyc.Insfrastructure
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
             await _mediator.DispatchDomainEventsAsync(this);
-
             // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
             // performed through the DbContext will be committed
             var result = await base.SaveChangesAsync(cancellationToken);
@@ -38,6 +38,7 @@ namespace Kyc.Insfrastructure
             modelBuilder.ApplyConfiguration(new KycStatusConfiguration());
             modelBuilder.ApplyConfiguration(new KycInformationConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new CountryConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
