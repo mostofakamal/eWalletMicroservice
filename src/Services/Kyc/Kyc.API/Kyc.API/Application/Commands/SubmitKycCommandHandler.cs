@@ -11,21 +11,21 @@ namespace Kyc.API.Application.Commands
 {
     public class SubmitKycCommandHandler : IRequestHandler<SubmitKycCommand, bool>
     {
-        private readonly IKycRepository kycRepository;
+        private readonly IUserRepository userRepository;
         private readonly IIdentityService identityService;
 
-        public SubmitKycCommandHandler(IKycRepository kycRepository,IIdentityService identityService)
+        public SubmitKycCommandHandler(IUserRepository kycRepository, IIdentityService identityService)
         {
-            this.kycRepository = kycRepository;
+            this.userRepository = kycRepository;
             this.identityService = identityService;
         }
         public async Task<bool> Handle(SubmitKycCommand request, CancellationToken cancellationToken)
         {
-            var userId = identityService.GetUserIdentity();
-            var kycInformation = new KycInformation(Guid.Parse(userId), request.NID, request.FirstName, request.LastName, KycStatuses.Pending);
-            await this.kycRepository.Add(kycInformation);
-            await this.kycRepository.UnitOfWork.SaveEntitiesAsync();
-            return true;
+            var userId = Guid.Parse(identityService.GetUserIdentity());
+            var user = await userRepository.Get(userId);
+            var kycInformation = new KycInformation(userId, request.NID, request.FirstName, request.LastName, KycStatuses.Pending);
+            user.AddKyc(kycInformation);
+            return await this.userRepository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }

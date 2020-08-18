@@ -17,13 +17,10 @@ namespace Kyc.API.Infrastructure
     {
         public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
         {
-
             services.AddTransient<INotificationHandler<KycSubmittedDomainEvent>, KycSubmittedDomainEventHandler>();
-
             services.AddScoped<UserCreatedIntegratedEventConsumer>();
-
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
-            services.AddScoped<IKycRepository, KycRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

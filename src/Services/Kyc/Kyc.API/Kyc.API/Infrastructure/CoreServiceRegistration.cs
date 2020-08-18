@@ -17,14 +17,14 @@ namespace Kyc.API.Infrastructure
     {
         public static IServiceCollection RegisterDbAccess(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<KycContext>(options => options.UseSqlServer(
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(
                config.GetConnectionString("DefaultConnection"),
                b =>
                {
                    b.MigrationsAssembly("Kyc.API");
                    //b.EnableRetryOnFailure(5);
                }));
-            services.AddScoped<IKycRepository, KycRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
 
@@ -32,7 +32,7 @@ namespace Kyc.API.Infrastructure
         {
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                scope.ServiceProvider.GetRequiredService<KycContext>().Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<UserContext>().Database.Migrate();
             }
 
             return app;

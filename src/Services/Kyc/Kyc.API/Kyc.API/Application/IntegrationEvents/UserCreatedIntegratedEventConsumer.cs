@@ -9,22 +9,22 @@ namespace Kyc.API.Application.IntegrationEvents
     public class UserCreatedIntegratedEventConsumer : IConsumer<IUserCreatedIntegrationEvent>
     {
         private readonly ILogger<UserCreatedIntegratedEventConsumer> logger;
-        private readonly IKycRepository kycRepository;
+        private readonly IUserRepository userRepository;
 
         public UserCreatedIntegratedEventConsumer(ILogger<UserCreatedIntegratedEventConsumer> logger,
-            IKycRepository kycRepository)
+            IUserRepository userRepository)
         {
             this.logger = logger;
-            this.kycRepository = kycRepository;
+            this.userRepository = userRepository;
         }
         public async Task Consume(ConsumeContext<IUserCreatedIntegrationEvent> context)
         {
             IUserCreatedIntegrationEvent message = context.Message;
             this.logger.Log(LogLevel.Information, $"user registred event fired on kyc {message.UserGuid}");
-            var user = new User(message.UserGuid, false);
+            var user = new User(message.UserGuid, false, message.CountryId);
 
-            await this.kycRepository.Add(user);
-            await this.kycRepository.UnitOfWork.SaveEntitiesAsync();
+            await this.userRepository.Add(user);
+            await this.userRepository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }
