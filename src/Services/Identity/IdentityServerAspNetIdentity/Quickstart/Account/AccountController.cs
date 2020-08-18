@@ -42,7 +42,7 @@ namespace IdentityServer.Quickstart.Account
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events, 
+            IEventService events,
             IEventPublisher eventPublisher,
             IPublishEndpoint endpoint)
         {
@@ -148,7 +148,7 @@ namespace IdentityServer.Quickstart.Account
                     }
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
@@ -170,14 +170,14 @@ namespace IdentityServer.Quickstart.Account
                 return BadRequest(new
                 {
                     Succeeded = false,
-                    Errors= new
+                    Errors = new
                     {
-                        Code= "DuplicatePhoneNumber",
-                        Description= $"PhoneNumber {viewModel.PhoneNumber} is already taken."
+                        Code = "DuplicatePhoneNumber",
+                        Description = $"PhoneNumber {viewModel.PhoneNumber} is already taken."
                     }
                 });
             }
-            
+
             var user = new ApplicationUser
             {
                 Email = viewModel.Email,
@@ -188,15 +188,15 @@ namespace IdentityServer.Quickstart.Account
                 CountryId = viewModel.CountryId
             };
 
-            var result= await _userManager.CreateAsync(user, viewModel.Password);
+            var result = await _userManager.CreateAsync(user, viewModel.Password);
             if (result.Succeeded)
             {
-                var createdUser= await _userManager.FindByNameAsync(viewModel.UserName);
-                await endpoint.Publish<IUserCreatedIntegrationEvent>(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id)));
+                var createdUser = await _userManager.FindByNameAsync(viewModel.UserName);
+                await endpoint.Publish<IUserCreatedIntegrationEvent>(new UserCreatedIntegrationEvent(Guid.Parse(createdUser.Id), createdUser.CountryId));
             }
             return Ok(result);
         }
-        
+
         /// <summary>
         /// Show logout page
         /// </summary>
