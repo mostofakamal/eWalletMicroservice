@@ -6,9 +6,12 @@ namespace Core.Lib.IntegrationEvents
     {
         public Guid UserGuid { get; }
 
-        public UserCreatedIntegrationEvent(Guid userGuid)
+        public int CountryId {get; }
+
+        public UserCreatedIntegrationEvent(Guid userGuid, int countryId)
         {
             UserGuid = userGuid;
+            CountryId = countryId;
         }
     }
 }

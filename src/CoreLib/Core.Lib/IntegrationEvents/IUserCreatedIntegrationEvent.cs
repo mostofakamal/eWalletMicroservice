@@ -2,8 +2,9 @@
 
 namespace Core.Lib.IntegrationEvents
 {
-    public interface IUserCreatedIntegrationEvent 
+    public interface IUserCreatedIntegrationEvent
     {
         Guid UserGuid { get; }
+        int CountryId { get; }
     }
 }

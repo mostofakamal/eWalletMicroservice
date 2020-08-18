@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Core.Lib.IntegrationEvents
 {
-    public interface IKycApprovedEvent : IItegration
+    public interface IIntegrationEventPublisher<T> where T: IItegration
     {
-        Guid UserId { get; set; }
+        void PublishIntegrationEvent(T @event);
     }
 }
