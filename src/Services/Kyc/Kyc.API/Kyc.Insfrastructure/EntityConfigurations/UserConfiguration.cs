@@ -9,7 +9,10 @@ namespace Kyc.Insfrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(_ => _.Id);
-            builder.HasMany(_ => _.KycInformations).WithOne(_=>_.User);
+
+            builder.HasMany(k => k.KycInformations).WithOne(u => u.User)
+                .OnDelete(DeleteBehavior.Cascade)
+                .Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

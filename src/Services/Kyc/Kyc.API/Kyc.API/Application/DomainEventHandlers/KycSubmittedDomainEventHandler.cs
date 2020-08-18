@@ -7,6 +7,7 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,13 +43,12 @@ namespace Kyc.API.Application.DomainEventHandlers
                 NID = notification.NID,
             };
             this.logger.Log(LogLevel.Information, $"Value: {notification.FirstName}, {notification.LastName} {notification.NID}");
-
             var kycVerificationResult = await externalKycVerifier.Verify(kycRequest, notification.User.Country.Name);
-
             this.logger.Log(LogLevel.Information, $"Value:{notification.NID}, {notification.FirstName}, {notification.LastName}, {kycVerificationResult} ");
-
-            var user = await this.userRepository.Get(notification.UserId);
-            user.UpdateKyc(notification.KycId, (short)kycVerificationResult);
+            
+            var user = await this.userRepository.Get(notification.User.Id);
+            user.UpdateKycStatus((short)kycVerificationResult);
+            userRepository.Update(user);
 
             await this.userRepository.UnitOfWork.SaveEntitiesAsync();
         }

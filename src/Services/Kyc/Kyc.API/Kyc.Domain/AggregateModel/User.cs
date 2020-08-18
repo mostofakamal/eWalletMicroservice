@@ -9,7 +9,10 @@ namespace Kyc.Domain.AggregateModel
     public class User : Entity, IAggregateRoot
     {
         public bool IsKycVerified { get; private set; }
-        public List<KycInformation> KycInformations { get; private set; }
+
+        private readonly List<KycInformation> _kycInformations;
+        public IReadOnlyCollection<KycInformation> KycInformations => _kycInformations;
+
         public int CountryId { get; private set; }
         public Country Country { get; private set; }
         public User()
@@ -26,14 +29,14 @@ namespace Kyc.Domain.AggregateModel
 
         public void AddKyc(KycInformation kycInformation)
         {
-            this.KycInformations.Add(kycInformation);
+            _kycInformations.Add(kycInformation);
             var kycStartedDomainEvent = new KycSubmittedDomainEvent(this, kycInformation.Id, kycInformation.NID, kycInformation.FirstName, kycInformation.LastName);
             this.AddDomainEvent(kycStartedDomainEvent);
         }
-        public void UpdateKyc(Guid kycId, short kycStatus)
+        public void UpdateKycStatus(short kycStatus)
         {
-            var kyc = this.KycInformations.Where(k => k.Id == kycId).FirstOrDefault();
-            kyc.SetStatus(kycStatus);
+            var kycToUpdate = this.KycInformations.OrderByDescending(d => d.CreatedTime).FirstOrDefault();
+            kycToUpdate.SetStatus(kycStatus);
         }
     }
 }

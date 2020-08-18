@@ -4,6 +4,7 @@ using Kyc.Insfrastructure.EntityConfigurations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,11 +26,10 @@ namespace Kyc.Insfrastructure
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
-            await _mediator.DispatchDomainEventsAsync(this);
             // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
             // performed through the DbContext will be committed
             var result = await base.SaveChangesAsync(cancellationToken);
-
+            await _mediator.DispatchDomainEventsAsync(this);
             return true;
         }
 

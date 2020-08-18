@@ -1,6 +1,7 @@
 ﻿using Core.Lib.IdentityServer;
 using Kyc.Domain.AggregateModel;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace Kyc.API.Application.Commands
             var user = await userRepository.Get(userId);
             var kycInformation = new KycInformation(userId, request.NID, request.FirstName, request.LastName, KycStatuses.Pending);
             user.AddKyc(kycInformation);
+            userRepository.Update(user);
             return await this.userRepository.UnitOfWork.SaveEntitiesAsync();
         }
     }
