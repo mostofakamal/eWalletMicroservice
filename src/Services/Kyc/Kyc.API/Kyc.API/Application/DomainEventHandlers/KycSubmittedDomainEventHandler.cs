@@ -1,5 +1,4 @@
-﻿using Core.Lib.IdentityServer;
-using Core.Lib.IntegrationEvents;
+﻿using Core.Lib.IntegrationEvents;
 using Kyc.API.Application.Services;
 using Kyc.Domain.AggregateModel;
 using Kyc.Domain.Events;
@@ -10,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Lib.Services;
 
 namespace Kyc.API.Application.DomainEventHandlers
 {

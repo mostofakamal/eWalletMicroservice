@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: transactionservice
+  namespace: ewallet
+spec:
+  selector:
+    app: transactionapp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+

@@ -1,5 +1,4 @@
-﻿using Core.Lib.IdentityServer;
-using Kyc.Domain.AggregateModel;
+﻿using Kyc.Domain.AggregateModel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Lib.Services;
 
 namespace Kyc.API.Application.Commands
 {

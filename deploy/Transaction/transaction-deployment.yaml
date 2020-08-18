@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-app
+  namespace: ewallet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transactionapp
+  template:
+    metadata:
+      labels:
+        app: transactionapp
+    spec:
+      containers:
+        - name: transactionservice
+          image: transactionservice:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          ports:
+            - name: http
+              containerPort: 80
+          
+          env:
+            - name: ConnectionStrings_DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: transactiondb
+                  key: DbConnectionString
+
+            - name: QueueSettings_HostName
+              value: rabbit-release-rabbitmq
+            - name: QueueSettings_VirtualHost
+              value: /
+            - name: QueueSettings_UserName
+              value: user
+            - name: QueueSettings_Password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-release-rabbitmq
+                  key: rabbitmq-password
