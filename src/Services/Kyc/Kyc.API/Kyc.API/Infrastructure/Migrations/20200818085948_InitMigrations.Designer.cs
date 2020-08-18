@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kyc.API.Infrastructure.Migrations
 {
-    [DbContext(typeof(KycContext))]
-    [Migration("20200812063656_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(UserContext))]
+    [Migration("20200818085948_InitMigrations")]
+    partial class InitMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,58 @@ namespace Kyc.API.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Kyc.Domain.AggregateModel.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid>("CountryGuid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CurrencyCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsoCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CountryGuid = new Guid("dab5f416-e25a-43e4-a277-5cfe92b7ae30"),
+                            CurrencyCode = "BDT",
+                            IsoCode = "BD",
+                            Name = "Bangladesh"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CountryGuid = new Guid("0b5e1eaa-bfae-44cb-8eba-752bb95ef359"),
+                            CurrencyCode = "INR",
+                            IsoCode = "IN",
+                            Name = "India"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CountryGuid = new Guid("bd50407e-ec38-4cb0-bf23-f198c7d0097e"),
+                            CurrencyCode = "NOK",
+                            IsoCode = "NO",
+                            Name = "Norway"
+                        });
+                });
 
             modelBuilder.Entity("Kyc.Domain.AggregateModel.KycInformation", b =>
                 {
@@ -93,10 +145,15 @@ namespace Kyc.API.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsKycVerified")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Users");
                 });
@@ -110,9 +167,18 @@ namespace Kyc.API.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Kyc.Domain.AggregateModel.User", "User")
-                        .WithMany()
+                        .WithMany("KycInformations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Kyc.Domain.AggregateModel.User", b =>
+                {
+                    b.HasOne("Kyc.Domain.AggregateModel.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
