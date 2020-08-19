@@ -22,13 +22,36 @@ namespace Transaction.Infrastructure.Repositories
             return _context.Users.Add(user).Entity;
         }
 
+        public async Task<User> GetAsync(string phoneNumber)
+        {
+            var user = await _context
+                .Users
+                .Include(x => x.Transactions).ThenInclude(x => x.TransactionType)
+                .Include(x => x.Transactions).ThenInclude(x => x.TransactionStatus)
+                .FirstOrDefaultAsync(o => o.PhoneNumber == phoneNumber);
+            if (user == null)
+            {
+                user = _context
+                    .Users
+                    .Local
+                    .FirstOrDefault(o => o.PhoneNumber == phoneNumber);
+            }
+            if (user != null)
+            {
+                await _context.Entry(user)
+                    .Collection(i => i.Transactions).LoadAsync();
+
+            }
+
+            return user;
+        }
         public async Task<User> GetAsync(Guid userIdentityGuid)
         {
             var user = await _context
                 .Users
-                .Include(x => x.Transactions)
+                .Include(x => x.Transactions).ThenInclude(x=>x.TransactionType)
+                .Include(x => x.Transactions).ThenInclude(x => x.TransactionStatus)
                 .FirstOrDefaultAsync(o => o.UserIdentityGuid == userIdentityGuid);
-            
             if (user == null)
             {
                 user = _context

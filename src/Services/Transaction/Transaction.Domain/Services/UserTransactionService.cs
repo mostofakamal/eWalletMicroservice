@@ -14,19 +14,38 @@ namespace Transaction.Domain.Services
             _userRepository = userRepository;
         }
 
-        public async Task DoTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
+        public async Task<Guid> TransferMoney(decimal amount, Guid senderUserGuid, string receiverPhoneNumber)
+        {
+            var senderUser = await _userRepository.GetAsync(senderUserGuid);
+            var receiverUser = await _userRepository.GetAsync(receiverPhoneNumber);
+            return await PerformTransactionCore(amount, TransactionType.Transfer, senderUser, receiverUser);
+        }
+
+        public async Task<Guid> DoTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
             TransactionType transactionType)
         {
             var senderUser = await _userRepository.GetAsync(senderUserGuid);
             var receiverUser = await _userRepository.GetAsync(receiverUserGuid);
-            CheckSenderAndReceiverAreSame(senderUserGuid, receiverUserGuid);
+            return await PerformTransactionCore(amount, transactionType, senderUser, receiverUser);
+        }
+
+        private async Task<Guid> PerformTransactionCore(decimal amount,
+            TransactionType transactionType, User senderUser, User receiverUser)
+        {
+            CheckPreconditions(senderUser, receiverUser);
+            // Debit transaction from sender
+            var debitTransactionId = senderUser.CreateDebitTransaction(amount, receiverUser, transactionType);
+            // Credit transaction to receiver
+            receiverUser.CreateCreditTransaction(amount, senderUser, transactionType);
+            await _userRepository.UnitOfWork.SaveEntitiesAsync();
+            return debitTransactionId;
+        }
+
+        private void CheckPreconditions(User senderUser, User receiverUser)
+        {
+            CheckSenderAndReceiverAreSame(senderUser.UserIdentityGuid, receiverUser.UserIdentityGuid);
             CheckSenderReceiverDifferentCountry(senderUser, receiverUser);
             CheckTransactionEligibilityOfSenderAndReceiver(senderUser, receiverUser);
-            // Debit transaction from sender
-            senderUser.CreateDebitTransaction(amount, receiverUserGuid, transactionType);
-            // Credit transaction to receiver
-            receiverUser.CreateCreditTransaction(amount, senderUserGuid, transactionType);
-            await _userRepository.UnitOfWork.SaveEntitiesAsync();
         }
 
         private void CheckSenderReceiverDifferentCountry(User senderUser, User receiverUser)

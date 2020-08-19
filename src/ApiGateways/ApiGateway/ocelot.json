@@ -47,6 +47,22 @@
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": [ "transaction" ]
       }
+    },
+    {
+      "DownstreamPathTemplate": "/transactions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "transactionservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/transactions",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": [ "transaction" ]
+      }
     }
   ],
   "GlobalConfiguration": {

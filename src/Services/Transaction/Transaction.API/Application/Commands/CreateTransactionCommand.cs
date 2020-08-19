@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Transaction.API.Application.Commands
 {
-    public class CreateTransactionCommand: IRequest
+    public class CreateTransactionCommand: IRequest<TransactionResponse>
     {
         public decimal Amount { get; set; }
 

@@ -4,7 +4,7 @@ using Transaction.Domain.AggregateModel;
 
 namespace Transaction.Domain.Events
 {
-    public class TransactionCreatedDomainEvent: INotification
+    public class CreditTransactionCreatedDomainEvent : INotification
     {
         public Guid TransactionGuid { get; }
 
@@ -16,7 +16,7 @@ namespace Transaction.Domain.Events
 
         public TransactionType TransactionType { get; }
 
-        public TransactionCreatedDomainEvent(decimal amount,Guid senderUserGuid,Guid receiverUserGuid,TransactionType type,Guid transactionId)
+        public CreditTransactionCreatedDomainEvent(decimal amount, Guid senderUserGuid, Guid receiverUserGuid, TransactionType type, Guid transactionId)
         {
             Amount = amount;
             SenderUserGuid = senderUserGuid;
@@ -24,6 +24,5 @@ namespace Transaction.Domain.Events
             TransactionType = type;
             TransactionGuid = transactionId;
         }
-
     }
 }

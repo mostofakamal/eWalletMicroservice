@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Transaction.API.Application.Behaviours;
 using Transaction.API.Application.IntegrationEvents;
 using Transaction.Domain.AggregateModel;
 using Transaction.Domain.Services;
@@ -21,9 +22,10 @@ namespace Transaction.API.Infrastructure
     {
         public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
         {
-            //services.AddScoped<UserCreatedIntegrationEventConsumer>();
-            //services.AddScoped<KycApprovedIntegrationEventConsumer>();
+            
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserTransactionService, UserTransactionService>();
             return services;

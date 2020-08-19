@@ -6,7 +6,9 @@ namespace Transaction.Domain.Services
 {
     public interface IUserTransactionService
     {
-        Task DoTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
+        Task<Guid> DoTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
             TransactionType transactionType);
+
+        Task<Guid> TransferMoney(decimal amount, Guid senderUserGuid, string receiverPhoneNumber);
     }
 }

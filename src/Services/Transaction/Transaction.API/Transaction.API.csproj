@@ -24,9 +24,5 @@
     <ProjectReference Include="..\Transaction.Infrastructure\Transaction.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\DomainEventHandlers\" />
-  </ItemGroup>
-
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Transaction.Infrastructure.EntityConfigurations
@@ -12,6 +13,8 @@ namespace Transaction.Infrastructure.EntityConfigurations
             builder.Property(x => x.TransactionGuid).IsRequired();
             builder.Property(x => x.Amount).HasColumnType("decimal(18,2)").IsRequired();
             builder.Property(x => x.CounterPartyUserGuid).IsRequired();
+            builder.Property(x => x.Description).HasMaxLength(150).HasDefaultValue("").IsRequired();
+            builder.Property(x => x.CreateDate).HasDefaultValue(DateTime.UtcNow);
             builder
                 .Property<int>("_transactionTypeId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
