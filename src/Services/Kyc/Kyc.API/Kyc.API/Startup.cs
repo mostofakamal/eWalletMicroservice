@@ -58,6 +58,9 @@ namespace Kyc.API
             services.AddScoped<IntegrationEventService>();
             services.AddTransient<KycApprovedEventPublisher>();
 
+
+            services.AddTransient<KycVerificationService>();
+
             services.ConfigureAppServices();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

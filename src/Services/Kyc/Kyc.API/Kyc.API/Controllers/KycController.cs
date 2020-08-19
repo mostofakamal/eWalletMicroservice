@@ -1,4 +1,5 @@
 ﻿using Kyc.API.Application.Commands;
+using Kyc.API.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,13 @@ namespace Kyc.API.Controllers
         public async Task<IActionResult> SubmitKyc(SubmitKycCommand submitKycCommand)
         {
             var result = await this.mediator.Send<bool>(submitKycCommand);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetKycInformations()
+        {
+            var result = await this.mediator.Send<KycHistoryResponse>(new GetKycHistoryQuery());
             return Ok(result);
         }
     }
