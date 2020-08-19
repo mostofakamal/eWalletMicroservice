@@ -5,7 +5,7 @@ using Core.Lib.Services;
 using MediatR;
 using Transaction.Domain.AggregateModel;
 
-namespace Transaction.API.Application.Commands
+namespace Transaction.API.Application.Queries
 {
 
     public class GetBalanceQueryHandler : IRequestHandler<GetBalanceQuery, BalanceResponse>

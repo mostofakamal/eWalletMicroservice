@@ -39,27 +39,35 @@ namespace Transaction.Domain.AggregateModel
             return this;
         }
 
-        public void CreateDebitTransaction(decimal amount, Guid counterPartyUserGuid, TransactionType type)
+        public Guid CreateDebitTransaction(decimal amount, User counterPartyUser, TransactionType type)
         {
             if (!CanDebit(amount))
             {
                 throw new InSufficientBalanceDomainException("User does not have sufficient balance to make the transaction!");
             }
-            var transaction = new Transaction(-amount, counterPartyUserGuid, type);
+
+            var description = $"Debit for {type.Name} to {counterPartyUser.PhoneNumber}";
+            var transaction = new Transaction(-amount, counterPartyUser.UserIdentityGuid, type, description);
             _transactions.Add(transaction);
-            AddDomainEvent(new TransactionCreatedDomainEvent(amount, UserIdentityGuid, counterPartyUserGuid,
+            AddDomainEvent(new DebitTransactionCreatedDomainEvent(amount, UserIdentityGuid, counterPartyUser.UserIdentityGuid,
                 type, transaction.TransactionGuid));
+            return transaction.TransactionGuid;
         }
 
-        public void CreateCreditTransaction(decimal amount, Guid counterPartyUserGuid, TransactionType type)
+        public void CreateCreditTransaction(decimal amount, User counterPartyUser, TransactionType type)
         {
-            var transaction = new Transaction(amount, counterPartyUserGuid, type);
+            var description = $"Credit for {type.Name} from {counterPartyUser.PhoneNumber}";
+            var transaction = new Transaction(amount, counterPartyUser.UserIdentityGuid, type,description);
             _transactions.Add(transaction);
+            AddDomainEvent(new CreditTransactionCreatedDomainEvent(amount, UserIdentityGuid, counterPartyUser.UserIdentityGuid,
+                type, transaction.TransactionGuid));
         }
 
         public decimal GetBalance()
         {
-            return Transactions?.Sum(x => x.Amount) ?? 0;
+            return Transactions?
+                       .Where(x=>x.TransactionStatus.Id == TransactionStatus.Ok.Id)
+                       .Sum(x => x.Amount) ?? 0;
         }
 
         public bool CanDebit(decimal amount)

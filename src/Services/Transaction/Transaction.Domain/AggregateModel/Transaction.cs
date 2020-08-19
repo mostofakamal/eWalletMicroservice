@@ -9,13 +9,15 @@ namespace Transaction.Domain.AggregateModel
         {
             
         }
-        public Transaction(decimal amount,Guid counterPartyUserGuid,TransactionType type)
+        public Transaction(decimal amount,Guid counterPartyUserGuid,TransactionType type,string description)
         {
             Amount = amount;
             CounterPartyUserGuid = counterPartyUserGuid;
             _transactionTypeId = type.Id;
             TransactionGuid = Guid.NewGuid();
             _transactionStatusId = TransactionStatus.Ok.Id;
+            Description = description;
+            CreateDate = DateTime.UtcNow;
         }
         public Guid TransactionGuid { get; }
 
@@ -32,6 +34,9 @@ namespace Transaction.Domain.AggregateModel
 
         public TransactionStatus TransactionStatus { get; private set; }
 
+        public string Description { get; private set; }
+
+        public DateTime CreateDate { get; private set; }
 
     }
 }

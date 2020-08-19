@@ -9,5 +9,6 @@ namespace Transaction.Domain.AggregateModel
         User Add(User user);
 
         Task<User> GetAsync(Guid userIdentityGuid);
+        Task<User> GetAsync(string phoneNumber);
     }
 }
