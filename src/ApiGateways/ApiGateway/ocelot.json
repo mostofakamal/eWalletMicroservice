@@ -17,6 +17,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/kyc",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "kycservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/kyc",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": [ "kyc" ]
+      }
+    },
+    {
       "DownstreamPathTemplate": "/transactions/transfers",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
