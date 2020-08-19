@@ -24,15 +24,15 @@ namespace Kyc.API.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitKyc(SubmitKycCommand submitKycCommand)
         {
-            var result = await this.mediator.Send<bool>(submitKycCommand);
-            return Ok(result);
+            var kycResponse = await this.mediator.Send<SumitKycResponse>(submitKycCommand);
+            return Ok(kycResponse);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetKycInformations()
         {
-            var result = await this.mediator.Send<KycHistoryResponse>(new GetKycHistoryQuery());
-            return Ok(result);
+            var kycHistoryResponse = await this.mediator.Send<KycHistoryResponse>(new GetKycHistoryQuery());
+            return Ok(kycHistoryResponse);
         }
     }
 }

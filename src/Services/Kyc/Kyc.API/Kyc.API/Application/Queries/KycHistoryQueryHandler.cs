@@ -23,7 +23,7 @@ namespace Kyc.API.Application.Queries
         public async Task<KycHistoryResponse> Handle(GetKycHistoryQuery request, CancellationToken cancellationToken)
         {
             var currentUserId = Guid.Parse(identityService.GetUserIdentity());
-            var user = await this.userRepository.Get(currentUserId);
+            var user = await this.userRepository.GetAsync(currentUserId);
             var kycHistories = user.KycInformations.Select(k =>
             new KycHistory()
             {

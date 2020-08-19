@@ -3,7 +3,7 @@
 namespace Kyc.API.Application.Commands
 {
 
-    public class SubmitKycCommand : IRequest<bool>
+    public class SubmitKycCommand : IRequest<SumitKycResponse>
     {
         public string NID { get; set; }
         public string FirstName { get; set; }

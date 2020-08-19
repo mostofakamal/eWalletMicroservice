@@ -9,7 +9,8 @@ namespace Kyc.Domain.AggregateModel
     public interface IUserRepository : IRepository<User>
     {
         Task<User> Add(User user);
-        Task<User> Get(Guid kycId);
+        Task<User> GetAsync(Guid kycId);
+        Task<User> GetAsync(string nid);
         void Update(User order);
         
     }

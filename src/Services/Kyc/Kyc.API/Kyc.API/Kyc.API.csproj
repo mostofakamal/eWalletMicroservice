@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\DomainEventHandlers\" />
     <Folder Include="Infrastructure\Migrations\" />
   </ItemGroup>
 </Project>

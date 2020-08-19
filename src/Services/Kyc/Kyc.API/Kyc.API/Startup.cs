@@ -45,6 +45,7 @@ namespace Kyc.API
             services.AddTransient<IIdentityService, IdentityService>();
 
             services.ConfigQueue();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kyc Service", Version = "v1" });
@@ -55,13 +56,8 @@ namespace Kyc.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
 
-            services.AddScoped<IntegrationEventService>();
-            services.AddTransient<KycApprovedEventPublisher>();
+            services.ConfigureAppServices(Configuration);
 
-
-            services.AddTransient<KycVerificationService>();
-
-            services.ConfigureAppServices();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -75,11 +71,6 @@ namespace Kyc.API
                             ValidAudiences = new[] { "kyc" }
                         };
                     });
-
-            services.AddHttpClient<IExternalKycVerifier, ExternalKycVerifier>(x =>
-            {
-                x.BaseAddress = new Uri(Configuration["NIDServerUrl"]);
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,7 +85,7 @@ namespace Kyc.API
             app.UseAuthorization();
             app.UseMvc();
             app.UseSwagger();
-
+            app.ConfigureExceptionMiddleware();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kyc Service V1");

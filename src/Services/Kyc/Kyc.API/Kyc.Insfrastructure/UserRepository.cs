@@ -25,7 +25,7 @@ namespace Kyc.Insfrastructure
             return added.Entity;
         }
 
-        public async Task<User> Get(Guid userId)
+        public async Task<User> GetAsync(Guid userId)
         {
             var user = await _context.Users
                 .Include(u => u.Country)
@@ -47,6 +47,14 @@ namespace Kyc.Insfrastructure
                     _context.Attach(item).State = EntityState.Modified;
             }
             _context.Entry(user).State = EntityState.Modified;
+        }
+
+        public async Task<User> GetAsync(string nid)
+        {
+            var user = await _context.Kycs
+                .Where(u => u.NID == nid && u.User.IsKycVerified)
+                .Select(k => k.User).FirstOrDefaultAsync();
+            return user;
         }
     }
 }
