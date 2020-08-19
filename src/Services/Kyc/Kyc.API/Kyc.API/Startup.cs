@@ -81,11 +81,13 @@ namespace Kyc.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMvc();
-            app.UseSwagger();
             app.ConfigureExceptionMiddleware();
+            app.UseSwagger();
+          
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kyc Service V1");
@@ -93,7 +95,7 @@ namespace Kyc.API
             });
 
             app.InitializeDatabase();
-            //app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
