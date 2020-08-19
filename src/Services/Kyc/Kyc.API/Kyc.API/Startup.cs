@@ -2,8 +2,11 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using Core.Lib.RabbitMq.Configs;
 using Core.Lib.Services;
+using Kyc.API.Application.Behaviors;
+using Kyc.API.Application.IntegrationEvents;
 using Kyc.API.Application.Services;
 using Kyc.API.Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,6 +51,12 @@ namespace Kyc.API
             });
 
             services.RegisterDbAccess(Configuration);
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+
+            services.AddScoped<IntegrationEventService>();
+            services.AddTransient<KycApprovedEventPublisher>();
 
             services.ConfigureAppServices();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

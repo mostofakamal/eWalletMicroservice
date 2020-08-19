@@ -38,5 +38,15 @@ namespace Kyc.Domain.AggregateModel
             var kycToUpdate = this.KycInformations.OrderByDescending(d => d.CreatedTime).FirstOrDefault();
             kycToUpdate.SetStatus(kycStatus);
         }
+
+        public void SetVerifiedStatus(short kycVerificationResult)
+        {
+            if(kycVerificationResult == (short) KycStatuses.Approved)
+            {
+                IsKycVerified = true;
+
+                //here intergration event should be added
+            }
+        }
     }
 }

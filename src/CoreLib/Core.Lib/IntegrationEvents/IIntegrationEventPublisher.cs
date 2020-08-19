@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Lib.IntegrationEvents
 {
-    public interface IIntegrationEventPublisher<T> where T: IItegration
+    public interface IIntegrationEventPublisher<T>
     {
         void PublishIntegrationEvent(T @event);
     }

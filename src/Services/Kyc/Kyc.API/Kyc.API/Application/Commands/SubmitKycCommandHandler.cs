@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Lib.Services;
+using Kyc.API.Application.Services;
 
 namespace Kyc.API.Application.Commands
 {
@@ -15,7 +16,7 @@ namespace Kyc.API.Application.Commands
         private readonly IUserRepository userRepository;
         private readonly IIdentityService identityService;
 
-        public SubmitKycCommandHandler(IUserRepository kycRepository, IIdentityService identityService)
+        public SubmitKycCommandHandler(IUserRepository kycRepository, IIdentityService identityService, KycVerificationService kycVerificationService)
         {
             this.userRepository = kycRepository;
             this.identityService = identityService;
@@ -24,6 +25,7 @@ namespace Kyc.API.Application.Commands
         {
             var userId = Guid.Parse(identityService.GetUserIdentity());
             var user = await userRepository.Get(userId);
+            if (user.IsKycVerified) return false;
             var kycInformation = new KycInformation(userId, request.NID, request.FirstName, request.LastName, KycStatuses.Pending);
             user.AddKyc(kycInformation);
             userRepository.Update(user);

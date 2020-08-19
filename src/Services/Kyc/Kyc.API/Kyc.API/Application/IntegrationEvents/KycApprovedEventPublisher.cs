@@ -4,7 +4,7 @@ using System;
 
 namespace Kyc.API.Application.IntegrationEvents
 {
-    public class KycApprovedEventPublisher : IIntegrationEventPublisher<KycApprovedEvent>
+    public class KycApprovedEventPublisher : IIntegrationEventPublisher<IKycApprovedEvent>
     {
         private readonly IPublishEndpoint _endpoint;
 
@@ -13,9 +13,9 @@ namespace Kyc.API.Application.IntegrationEvents
             this._endpoint = endpoint;
         }
 
-        public void PublishIntegrationEvent(KycApprovedEvent kycApprovedEvent)
+        public void PublishIntegrationEvent(IKycApprovedEvent @event)
         {
-            this._endpoint.Publish<IKycApprovedEvent>(kycApprovedEvent);
+            this._endpoint.Publish<IKycApprovedEvent>(@event);
         }
     }
 }

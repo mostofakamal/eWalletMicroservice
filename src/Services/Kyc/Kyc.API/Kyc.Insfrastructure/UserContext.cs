@@ -30,6 +30,7 @@ namespace Kyc.Insfrastructure
             // performed through the DbContext will be committed
             var result = await base.SaveChangesAsync(cancellationToken);
             await _mediator.DispatchDomainEventsAsync(this);
+            
             return true;
         }
 
