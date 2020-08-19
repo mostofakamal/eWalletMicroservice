@@ -54,7 +54,6 @@ namespace Kyc.API.Application.DomainEventHandlers
             user.UpdateKycStatus((short)kycVerificationResult);
             user.SetVerifiedStatus((short)kycVerificationResult);
             userRepository.Update(user);
-            integrationEventService.AddAndSaveEventAsync(new KycApprovedEvent());
 
             await this.userRepository.UnitOfWork.SaveEntitiesAsync();
 
