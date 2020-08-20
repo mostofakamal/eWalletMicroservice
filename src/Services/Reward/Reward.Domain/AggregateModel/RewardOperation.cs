@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Reward.Domain.AggregateModel
 {
-    public class Reward
+    public class RewardOperation
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

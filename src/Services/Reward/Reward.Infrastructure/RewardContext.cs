@@ -17,8 +17,7 @@ namespace Reward.Infrastructure
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Domain.AggregateModel.Reward> Rewards { get; set; }
-
+        public DbSet<UserReward> UserRewards { get; set; }
 
         public RewardContext(DbContextOptions<RewardContext> options, IMediator mediator) : base(options)
         {
@@ -30,6 +29,9 @@ namespace Reward.Infrastructure
         {
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfigurations());
             modelBuilder.ApplyConfiguration(new TransactionTypeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRewardConfiguration());
+            modelBuilder.ApplyConfiguration(new RewardRuleConfiguration());
+            modelBuilder.ApplyConfiguration(new RewardOperationConfiguration());
         }
 
         private IDbContextTransaction _currentTransaction;

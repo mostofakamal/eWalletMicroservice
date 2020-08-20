@@ -12,7 +12,8 @@ namespace Reward.Infrastructure.EntityConfigurations
             builder.HasKey(b => b.Id);
 
             builder.Ignore(b => b.DomainEvents);
-            var navigation = builder.Metadata.FindNavigation(nameof(User.Rewards));
+
+            var navigation = builder.Metadata.FindNavigation(nameof(User.UserRewards));
 
             // DDD Patterns comment:
             //Set as field (New since EF 1.1) to access the Transactions collection property through its field

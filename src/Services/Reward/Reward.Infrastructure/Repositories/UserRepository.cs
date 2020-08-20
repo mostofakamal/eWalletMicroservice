@@ -26,7 +26,7 @@ namespace Reward.Infrastructure.Repositories
         {
             var user = await _context
                 .Users
-                .Include(x => x.Rewards)
+                .Include(x => x.UserRewards)
                 //.ThenInclude(x => x.TransactionType)
                 //.Include(x => x.Transactions).ThenInclude(x => x.TransactionStatus)
                 .FirstOrDefaultAsync(o => o.PhoneNumber == phoneNumber);
@@ -40,7 +40,7 @@ namespace Reward.Infrastructure.Repositories
             if (user != null)
             {
                 await _context.Entry(user)
-                    .Collection(i => i.Rewards).LoadAsync();
+                    .Collection(i => i.UserRewards).LoadAsync();
 
             }
 
@@ -50,7 +50,7 @@ namespace Reward.Infrastructure.Repositories
         {
             var user = await _context
                 .Users
-                .Include(x => x.Rewards)
+                .Include(x => x.UserRewards)
                 //.ThenInclude(x=>x.TransactionType)
                 //.Include(x => x.Transactions).ThenInclude(x => x.TransactionStatus)
                 .FirstOrDefaultAsync(o => o.UserIdentityGuid == userIdentityGuid);
@@ -64,7 +64,7 @@ namespace Reward.Infrastructure.Repositories
             if (user != null)
             {
                 await _context.Entry(user)
-                    .Collection(i => i.Rewards).LoadAsync();
+                    .Collection(i => i.UserRewards).LoadAsync();
                
             }
 

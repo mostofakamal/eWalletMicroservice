@@ -13,7 +13,7 @@ namespace Reward.Domain.AggregateModel
 
         public string PhoneNumber { get; private set; }
 
-        public List<Reward> Rewards { get; private set;}
+        public List<UserReward> UserRewards { get; private set;}
 
         protected User()
         {
