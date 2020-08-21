@@ -1,6 +1,6 @@
-﻿namespace IntegrationEventLog
+﻿namespace IntegrationDataLog
 {
-    public enum EventStateEnum
+    public enum IntegrationDataStateEnum
     {
         NotPublished = 0,
         InProgress = 1,

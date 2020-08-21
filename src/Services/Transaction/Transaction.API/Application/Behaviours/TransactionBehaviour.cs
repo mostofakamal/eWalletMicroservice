@@ -14,14 +14,14 @@ namespace Transaction.API.Application.Behaviours
     {
         private readonly ILogger<TransactionBehaviour<TRequest, TResponse>> _logger;
         private readonly TransactionContext _dbContext;
-        private readonly ITransactionIntegrationEventService _transactionIntegrationEventService;
+        private readonly ITransactionIntegrationDataService _transactionIntegrationDataService;
 
         public TransactionBehaviour(TransactionContext dbContext,
-            ITransactionIntegrationEventService transactionIntegrationEventService,
+            ITransactionIntegrationDataService transactionIntegrationDataService,
             ILogger<TransactionBehaviour<TRequest, TResponse>> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentException(nameof(TransactionContext));
-            _transactionIntegrationEventService = transactionIntegrationEventService ?? throw new ArgumentException(nameof(transactionIntegrationEventService));
+            _transactionIntegrationDataService = transactionIntegrationDataService ?? throw new ArgumentException(nameof(transactionIntegrationDataService));
             _logger = logger ?? throw new ArgumentException(nameof(ILogger));
         }
 
@@ -57,7 +57,7 @@ namespace Transaction.API.Application.Behaviours
                         transactionId = transaction.TransactionId;
                     }
 
-                    await _transactionIntegrationEventService.PublishEventsThroughEventBusAsync(transactionId);
+                    await _transactionIntegrationDataService.Publish(transactionId);
                 });
 
                 return response;

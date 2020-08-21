@@ -3,16 +3,16 @@ using Newtonsoft.Json;
 
 namespace Core.Lib.IntegrationEvents
 {
-    public class IntegrationEvent
+    public abstract class IntegrationData
     {
-        public IntegrationEvent()
+        protected IntegrationData()
         {
             Id = Guid.NewGuid();
             CreationDate = DateTime.UtcNow;
         }
 
         [JsonConstructor]
-        public IntegrationEvent(Guid id, DateTime createDate)
+        protected IntegrationData(Guid id, DateTime createDate)
         {
             Id = id;
             CreationDate = createDate;
@@ -23,5 +23,15 @@ namespace Core.Lib.IntegrationEvents
 
         [JsonProperty]
         public DateTime CreationDate { get; private set; }
+    }
+
+    public class IntegrationEvent: IntegrationData
+    {
+       
+    }
+
+    public class IntegrationMessage: IntegrationData
+    {
+
     }
 }
