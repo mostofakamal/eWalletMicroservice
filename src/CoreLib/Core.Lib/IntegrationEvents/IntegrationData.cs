@@ -24,14 +24,4 @@ namespace Core.Lib.IntegrationEvents
         [JsonProperty]
         public DateTime CreationDate { get; private set; }
     }
-
-    public class IntegrationEvent: IntegrationData
-    {
-       
-    }
-
-    public class IntegrationMessage: IntegrationData
-    {
-
-    }
 }
