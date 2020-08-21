@@ -1,7 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Data.Common;
+using System.Reflection;
 using Core.Lib.Middlewares.Exceptions;
 using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
+using IntegrationEventLog;
+using IntegrationEventLog.Services;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Transaction.API.Application.Behaviours;
 using Transaction.API.Application.IntegrationEvents;
 using Transaction.Domain.AggregateModel;
@@ -25,9 +30,14 @@ namespace Transaction.API.Infrastructure
             
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserTransactionService, UserTransactionService>();
+            services.AddTransient<Func<DbConnection, ILogger<IIntegrationEventLogService>, IIntegrationEventLogService>>(
+                sp => (c, l)=> new IntegrationEventLogService(c,l));
+
+            services.AddTransient<ITransactionIntegrationEventService, TransactionIntegrationEventService>();
+
             return services;
         }
     }
@@ -44,6 +54,15 @@ namespace Transaction.API.Infrastructure
                     //b.EnableRetryOnFailure(5);
                 }));
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddDbContext<IntegrationEventLogContext>(options =>
+            {
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    });
+            });
             return services;
         }
 
@@ -52,6 +71,7 @@ namespace Transaction.API.Infrastructure
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetRequiredService<TransactionContext>().Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<IntegrationEventLogContext>().Database.Migrate();
             }
 
             return app;

@@ -7,7 +7,7 @@ using Transaction.Domain.Services;
 
 namespace Transaction.API.Application.Commands
 {
-    public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand,TransactionResponse>
+    public class CreateTransactionCommandHandler :  IRequestHandler<CreateTransactionCommand,TransactionResponse>
     {
         private readonly IUserTransactionService _userTransactionService;
         private readonly ILogger<CreateTransactionCommandHandler> _logger;
