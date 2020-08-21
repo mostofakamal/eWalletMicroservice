@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\CoreLib\Core.Lib\Core.Lib.csproj" />
+    <ProjectReference Include="..\..\..\CoreLib\IntegrationEventLog\IntegrationEventLog.csproj" />
     <ProjectReference Include="..\Transaction.Domain\Transaction.Domain.csproj" />
     <ProjectReference Include="..\Transaction.Infrastructure\Transaction.Infrastructure.csproj" />
   </ItemGroup>

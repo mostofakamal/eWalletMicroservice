@@ -35,7 +35,7 @@ namespace Kyc.API.Application.Commands
 
             if (kyStatus == KycStatuses.Approved)
             {
-                eventPublisher.PublishIntegrationEvent(new KycApprovedEvent()
+                eventPublisher.PublishIntegrationEvent(new KycApprovedEvent
                 {
                     UserId = userId
                 });
