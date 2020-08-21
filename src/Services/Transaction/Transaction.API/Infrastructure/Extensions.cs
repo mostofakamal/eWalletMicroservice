@@ -69,6 +69,7 @@ namespace Transaction.API.Infrastructure
             {
                 config.AddConsumer<UserCreatedIntegrationEventConsumer>();
                 config.AddConsumer<KycApprovedIntegrationEventConsumer>();
+                config.AddConsumer<TransactionIntegrationEventConsumer>();
                 config.AddBus(EventBusRabbitMq.ConfigureBus);
             });
 

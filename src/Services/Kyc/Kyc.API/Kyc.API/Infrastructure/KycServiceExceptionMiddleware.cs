@@ -51,6 +51,7 @@ namespace Kyc.API.Infrastructure
 
             return context.Response.WriteAsync(new ErrorDetails
             {
+                ErrorCode = exception.GetType().Name,
                 ErrorMessage = exception.Message
             }.ToString());
         }

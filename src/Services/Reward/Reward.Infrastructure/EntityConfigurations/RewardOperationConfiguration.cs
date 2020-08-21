@@ -12,24 +12,7 @@ namespace Reward.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<RewardOperation> builder)
         {
             builder.Property(x => x.Name).IsRequired().HasMaxLength(20);
-            builder.HasData(new List<RewardOperation>
-            {
-                new RewardOperation()
-                {
-                    Id = 1,
-                    Name = "SubmitKyc"
-                },
-                new RewardOperation
-                {
-                    Id = 2,
-                    Name = "TransferMoney"
-                },
-                new RewardOperation
-                {
-                    Id = 3,
-                    Name = "BillPayment"
-                }
-            });
+            builder.HasData(RewardOperation.List());
         }
     }
 }
