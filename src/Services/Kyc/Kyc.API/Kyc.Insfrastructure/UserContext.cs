@@ -19,9 +19,10 @@ namespace Kyc.Insfrastructure
         public DbSet<User> Users { get; set; }
         public DbSet<Country> Countries { get; set; }
 
-        public UserContext(IMediator mediator, DbContextOptions options) : base(options)
+        public UserContext(DbContextOptions<UserContext> options, IMediator mediator) : base(options)
         {
-            this._mediator = mediator;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            System.Diagnostics.Debug.WriteLine("TransactionContext::ctor ->" + this.GetHashCode());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
