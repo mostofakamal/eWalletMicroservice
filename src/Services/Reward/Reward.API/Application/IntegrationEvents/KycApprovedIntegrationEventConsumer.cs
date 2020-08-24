@@ -24,7 +24,7 @@ namespace Reward.API.Application.IntegrationEvents
             var user = await _userRepository.GetAsync(kycApprovedEvent.UserId);
             if (user != null)
             {
-                TODO://Do Transaction
+                ///TODO:Do Transaction
                 await _userRepository.UnitOfWork.SaveEntitiesAsync();
             }
             else

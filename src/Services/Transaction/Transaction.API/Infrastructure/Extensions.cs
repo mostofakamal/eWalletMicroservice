@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Reflection;
+using Core.Lib.IntegrationEvents;
 using Core.Lib.Middlewares.Exceptions;
 using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
@@ -89,8 +90,16 @@ namespace Transaction.API.Infrastructure
             {
                 config.AddConsumer<UserCreatedIntegrationEventConsumer>();
                 config.AddConsumer<KycApprovedIntegrationEventConsumer>();
-                config.AddConsumer<TransactionIntegrationEventConsumer>();
-                config.AddBus(EventBusRabbitMq.ConfigureBus);
+
+                config.AddBus(provider => {
+                    var busControl = EventBusRabbitMq.ConfigureBus(provider, cfg => {
+                        cfg.ReceiveEndpoint(nameof(TransactionIntegrationMessage), ep =>
+                        {
+                            ep.Consumer<TransactionIntegrationEventConsumer>();
+                        });
+                    });
+                    return busControl;
+                });
             });
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());

@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Core.Lib.IntegrationEvents;
 using Core.Lib.Middlewares.Exceptions;
 using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
@@ -75,6 +77,7 @@ namespace Reward.API.Infrastructure
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IHostedService, EventBusHostedService>();
             services.AddSingleton<IEventPublisher, EventPublisher>();
+            EndpointConvention.Map<TransactionIntegrationMessage>(new Uri($"queue:{nameof(TransactionIntegrationMessage)}"));
             return services;
         }
     }

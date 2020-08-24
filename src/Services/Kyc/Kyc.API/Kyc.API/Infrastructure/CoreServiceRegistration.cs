@@ -1,6 +1,6 @@
-﻿using Core.Lib.RabbitMq;
+﻿using Core.Lib.IntegrationEvents;
+using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
-using Core.Lib.Repository;
 using Kyc.API.Application.IntegrationEvents;
 using Kyc.Domain.AggregateModel;
 using Kyc.Insfrastructure;
@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace Kyc.API.Infrastructure
 {
@@ -34,16 +35,24 @@ namespace Kyc.API.Infrastructure
             {
                 scope.ServiceProvider.GetRequiredService<UserContext>().Database.Migrate();
             }
-
             return app;
         }
 
         public static IServiceCollection ConfigQueue(this IServiceCollection services)
         {
+            services.AddTransient<UserCreatedIntegratedEventConsumer>();
+            services.AddTransient<TransactionIntegrationMessageConsumer>();
+
+            EndpointConvention.Map<ITransactionIntegrationMessage>(new Uri($"queue:{nameof(ITransactionIntegrationMessage)}"));
+
             services.AddMassTransit(config =>
             {
+                config.AddBus(provider =>
+                {
+                    var busControl = EventBusRabbitMq.ConfigureBus(provider);
+                    return busControl;
+                });
                 config.AddConsumer<UserCreatedIntegratedEventConsumer>();
-                config.AddBus(EventBusRabbitMq.ConfigureBus);
             });
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());

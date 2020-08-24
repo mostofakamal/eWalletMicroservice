@@ -10,5 +10,6 @@ namespace Core.Lib.RabbitMq.Abstractions
          Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : class;
          
          Task Publish(object message, Type messageType, CancellationToken cancellationToken = default);
+         Task Send(object message, Type messageType, CancellationToken cancellationToken = default);
     }
 }
