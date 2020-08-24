@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Lib", "..\..\..\CoreLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transaction.API", "Transaction.API.csproj", "{A4D3A83C-EC04-4A11-B125-EEAADDA23F7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEventLog", "..\..\..\CoreLib\IntegrationEventLog\IntegrationEventLog.csproj", "{70231A5F-0654-4889-AE81-2AC025ADEEDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationDataLog", "..\..\..\CoreLib\IntegrationDataLog\IntegrationDataLog.csproj", "{70231A5F-0654-4889-AE81-2AC025ADEEDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
