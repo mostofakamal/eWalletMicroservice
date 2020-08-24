@@ -9,11 +9,11 @@ namespace Transaction.API.Application.DomainEventHandlers
 {
     public class DebitTransactionCreatedDomainEventHandler: INotificationHandler<DebitTransactionCreatedDomainEvent>
     {
-        private readonly ITransactionIntegrationEventService _transactionIntegrationEventService;
+        private readonly ITransactionIntegrationDataService _transactionIntegrationDataService;
 
-        public DebitTransactionCreatedDomainEventHandler(ITransactionIntegrationEventService transactionIntegrationEventService)
+        public DebitTransactionCreatedDomainEventHandler(ITransactionIntegrationDataService transactionIntegrationDataService)
         {
-            _transactionIntegrationEventService = transactionIntegrationEventService;
+            _transactionIntegrationDataService = transactionIntegrationDataService;
         }
 
         public async Task Handle(DebitTransactionCreatedDomainEvent notification, CancellationToken cancellationToken)
@@ -21,7 +21,7 @@ namespace Transaction.API.Application.DomainEventHandlers
             var debitIntegrationEvent = new DebitTransactionCreatedIntegrationEvent(notification.Amount,
                 notification.TransactionGuid, notification.SenderUserGuid, notification.ReceiverUserGuid,
                 notification.TransactionType.Name);
-            await _transactionIntegrationEventService.AddAndSaveEventAsync(debitIntegrationEvent);
+            await _transactionIntegrationDataService.AddAndSaveAsync(debitIntegrationEvent);
         }
     }
 }

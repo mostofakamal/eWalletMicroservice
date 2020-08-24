@@ -10,7 +10,7 @@ COPY ["Services/Transaction/Transaction.API/Transaction.API.csproj", "Services/T
 COPY ["Services/Transaction/Transaction.Domain/Transaction.Domain.csproj", "Services/Transaction/Transaction.Domain/"]
 COPY ["Services/Transaction/Transaction.Infrastructure/Transaction.Infrastructure.csproj", "Services/Transaction/Transaction.Infrastructure/"]
 COPY ["CoreLib/Core.Lib/Core.Lib.csproj", "CoreLib/Core.Lib/"]
-COPY ["CoreLib/IntegrationEventLog/IntegrationEventLog.csproj", "CoreLib/IntegrationEventLog/"]
+COPY ["CoreLib/IntegrationDataLog/IntegrationDataLog.csproj", "CoreLib/IntegrationDataLog/"]
 RUN dotnet restore "Services/Transaction/Transaction.API/Transaction.API.csproj"
 COPY . .
 WORKDIR "/src/Services/Transaction/Transaction.API"

@@ -5,8 +5,8 @@ using Core.Lib.IntegrationEvents;
 using Core.Lib.Middlewares.Exceptions;
 using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
-using IntegrationEventLog;
-using IntegrationEventLog.Services;
+using IntegrationDataLog;
+using IntegrationDataLog.Services;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -34,10 +34,10 @@ namespace Transaction.API.Infrastructure
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserTransactionService, UserTransactionService>();
-            services.AddTransient<Func<DbConnection, ILogger<IIntegrationEventLogService>, IIntegrationEventLogService>>(
-                sp => (c, l)=> new IntegrationEventLogService(c,l));
+            services.AddTransient<Func<DbConnection, ILogger<IIntegrationDataLogService>, IIntegrationDataLogService>>(
+                sp => (c, l)=> new IntegrationDataLogService(c,l));
 
-            services.AddTransient<ITransactionIntegrationEventService, TransactionIntegrationEventService>();
+            services.AddTransient<ITransactionIntegrationDataService, TransactionIntegrationDataService>();
 
             return services;
         }
@@ -55,7 +55,7 @@ namespace Transaction.API.Infrastructure
                     //b.EnableRetryOnFailure(5);
                 }));
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddDbContext<IntegrationEventLogContext>(options =>
+            services.AddDbContext<IntegrationDataLogContext>(options =>
             {
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
                     sqlServerOptionsAction: sqlOptions =>
@@ -72,7 +72,7 @@ namespace Transaction.API.Infrastructure
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetRequiredService<TransactionContext>().Database.Migrate();
-                scope.ServiceProvider.GetRequiredService<IntegrationEventLogContext>().Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<IntegrationDataLogContext>().Database.Migrate();
             }
 
             return app;
@@ -101,7 +101,7 @@ namespace Transaction.API.Infrastructure
                     return busControl;
                 });
             });
-
+          
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
