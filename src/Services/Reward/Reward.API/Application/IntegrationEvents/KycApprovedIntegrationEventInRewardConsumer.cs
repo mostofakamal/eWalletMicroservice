@@ -6,12 +6,12 @@ using Reward.Domain.AggregateModel;
 
 namespace Reward.API.Application.IntegrationEvents
 {
-    public class KycApprovedIntegrationEventConsumer : IConsumer<KycApprovedIntegrationEvent>
+    public class KycApprovedIntegrationEventInRewardConsumer : IConsumer<KycApprovedIntegrationEvent>
     {
         private readonly ILogger<KycApprovedIntegrationEvent> _logger;
         private readonly IUserRepository _userRepository;
 
-        public KycApprovedIntegrationEventConsumer(ILogger<KycApprovedIntegrationEvent> logger, IUserRepository userRepository)
+        public KycApprovedIntegrationEventInRewardConsumer(ILogger<KycApprovedIntegrationEvent> logger, IUserRepository userRepository)
         {
             _logger = logger;
             _userRepository = userRepository;

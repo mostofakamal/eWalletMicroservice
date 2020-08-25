@@ -6,12 +6,12 @@ using Transaction.Domain.AggregateModel;
 
 namespace Transaction.API.Application.IntegrationEvents
 {
-    public class KycApprovedIntegrationEventConsumer : IConsumer<KycApprovedIntegrationEvent>
+    public class KycApprovedIntegrationEventInTransactionConsumer : IConsumer<KycApprovedIntegrationEvent>
     {
         private readonly ILogger<KycApprovedIntegrationEvent> _logger;
         private readonly IUserRepository _userRepository;
 
-        public KycApprovedIntegrationEventConsumer(ILogger<KycApprovedIntegrationEvent> logger, IUserRepository userRepository)
+        public KycApprovedIntegrationEventInTransactionConsumer(ILogger<KycApprovedIntegrationEvent> logger, IUserRepository userRepository)
         {
             _logger = logger;
             _userRepository = userRepository;

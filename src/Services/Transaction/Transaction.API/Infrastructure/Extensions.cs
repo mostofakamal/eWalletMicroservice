@@ -89,7 +89,7 @@ namespace Transaction.API.Infrastructure
             services.AddMassTransit(config =>
             {
                 config.AddConsumer<UserCreatedIntegrationEventInTransactionConsumer>();
-                config.AddConsumer<KycApprovedIntegrationEventConsumer>();
+                config.AddConsumer<KycApprovedIntegrationEventInTransactionConsumer>();
 
                 config.AddBus(provider => {
                     var busControl = EventBusRabbitMq.ConfigureBus(provider, cfg => {
