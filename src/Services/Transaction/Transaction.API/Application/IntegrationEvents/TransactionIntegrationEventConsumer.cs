@@ -7,9 +7,9 @@ using Transaction.Domain.Services;
 
 namespace Transaction.API.Application.IntegrationEvents
 {
-    public class TransactionIntegrationEventConsumer : IConsumer<ITransactionIntegrationMessage>
+    public class TransactionIntegrationEventConsumer : IConsumer<TransactionIntegrationMessage>
     {
-        public async Task Consume(ConsumeContext<ITransactionIntegrationMessage> context)
+        public async Task Consume(ConsumeContext<TransactionIntegrationMessage> context)
         {
             var transactionEvent = context.Message;
             var transactionType = TransactionType.FromValue<TransactionType>(transactionEvent.TransactionType);

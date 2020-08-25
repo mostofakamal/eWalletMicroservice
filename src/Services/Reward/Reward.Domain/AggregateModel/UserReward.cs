@@ -10,6 +10,9 @@ namespace Reward.Domain.AggregateModel
 
         public User User { get; set; }
 
+        public int WalletUserId { get; set; }
+        public User WalletUser { get; set; }
+
         public int RewardRuleId { get; set; }
 
         public RewardRule RewardRule { get; set; }

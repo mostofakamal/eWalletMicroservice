@@ -4,6 +4,7 @@ using Core.Lib.IntegrationEvents;
 using Core.Lib.Middlewares.Exceptions;
 using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
+using Core.Services;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -28,6 +29,7 @@ namespace Reward.API.Infrastructure
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRewardService, UserRewardService>();
+            services.AddScoped<IRewardService, RewardService>();
             return services;
         }
     }

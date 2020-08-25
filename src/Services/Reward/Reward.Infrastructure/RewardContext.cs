@@ -19,6 +19,8 @@ namespace Reward.Infrastructure
 
         public DbSet<UserReward> UserRewards { get; set; }
 
+        public DbSet<RewardRule> RewardRules { get; set; }
+
         public RewardContext(DbContextOptions<RewardContext> options, IMediator mediator) : base(options)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

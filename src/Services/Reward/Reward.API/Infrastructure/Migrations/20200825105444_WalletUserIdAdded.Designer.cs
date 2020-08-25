@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Reward.Infrastructure;
 
 namespace Reward.API.Infrastructure.Migrations
 {
     [DbContext(typeof(RewardContext))]
-    partial class RewardContextModelSnapshot : ModelSnapshot
+    [Migration("20200825105444_WalletUserIdAdded")]
+    partial class WalletUserIdAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

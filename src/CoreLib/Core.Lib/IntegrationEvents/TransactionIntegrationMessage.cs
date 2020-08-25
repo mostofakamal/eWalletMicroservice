@@ -2,7 +2,7 @@
 
 namespace Core.Lib.IntegrationEvents
 {
-    public class TransactionIntegrationMessage : ITransactionIntegrationMessage
+    public class TransactionIntegrationMessage : IntegrationMessage
     {
         public Guid SenderUserGuid { get; set; }
         public Guid ReceiverUserGuid { get; set; }
