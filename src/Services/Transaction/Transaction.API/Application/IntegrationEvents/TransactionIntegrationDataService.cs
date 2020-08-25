@@ -15,7 +15,7 @@ namespace Transaction.API.Application.IntegrationEvents
     {
         private readonly Func<DbConnection, ILogger<IIntegrationDataLogService>, IIntegrationDataLogService> _integrationDataLogServiceFactory;
         private readonly IPublishEndpoint _publishEndpoint;
-        private readonly ISendEndpoint _sendEndpoint;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly TransactionContext _transactionContext;
         private readonly IIntegrationDataLogService _dataLogService;
         private readonly ILogger<IIntegrationDataLogService> _logger;
@@ -23,14 +23,14 @@ namespace Transaction.API.Application.IntegrationEvents
         public TransactionIntegrationDataService(
             TransactionContext transactionContext,
             Func<DbConnection, ILogger<IIntegrationDataLogService>, IIntegrationDataLogService> integrationEventLogServiceFactory,
-            ILogger<IIntegrationDataLogService> logger,IPublishEndpoint endpoint,
-            ISendEndpointProvider sendEndpointProvider,IBusControl busControl)
+            ILogger<IIntegrationDataLogService> logger, IPublishEndpoint endpoint,
+            ISendEndpointProvider sendEndpointProvider, IBusControl busControl)
         {
             _transactionContext = transactionContext ?? throw new ArgumentNullException(nameof(transactionContext));
             _integrationDataLogServiceFactory = integrationEventLogServiceFactory ?? throw new ArgumentNullException(nameof(integrationEventLogServiceFactory));
             _publishEndpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
-            _sendEndpoint = sendEndpointProvider.GetSendEndpoint(busControl.Address).Result;
-            _dataLogService = _integrationDataLogServiceFactory(transactionContext.Database.GetDbConnection(),logger);
+            _sendEndpointProvider = sendEndpointProvider;
+            _dataLogService = _integrationDataLogServiceFactory(transactionContext.Database.GetDbConnection(), logger);
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -67,7 +67,8 @@ namespace Transaction.API.Application.IntegrationEvents
             }
             else
             {
-                await _sendEndpoint.Send(logData.IntegrationData, messageType);
+                var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + logData.EventTypeShortName));
+                await sendEndpoint.Send(logData.IntegrationData, messageType);
             }
         }
 
