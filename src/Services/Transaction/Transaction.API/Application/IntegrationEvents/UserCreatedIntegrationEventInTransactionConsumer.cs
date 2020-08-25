@@ -6,12 +6,12 @@ using Transaction.Domain.AggregateModel;
 
 namespace Transaction.API.Application.IntegrationEvents
 {
-    public class UserCreatedIntegrationEventConsumer : IConsumer<IUserCreatedIntegrationEvent>
+    public class UserCreatedIntegrationEventInTransactionConsumer : IConsumer<IUserCreatedIntegrationEvent>
     {
-        private readonly ILogger<UserCreatedIntegrationEventConsumer> _logger;
+        private readonly ILogger<UserCreatedIntegrationEventInTransactionConsumer> _logger;
         private readonly IUserRepository _userRepository;
 
-        public UserCreatedIntegrationEventConsumer(ILogger<UserCreatedIntegrationEventConsumer> logger, IUserRepository userRepository)
+        public UserCreatedIntegrationEventInTransactionConsumer(ILogger<UserCreatedIntegrationEventInTransactionConsumer> logger, IUserRepository userRepository)
         {
             this._logger = logger;
             _userRepository = userRepository;

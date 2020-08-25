@@ -61,7 +61,7 @@ namespace Kyc.API.Infrastructure
 
         public static IServiceCollection ConfigQueue(this IServiceCollection services)
         {
-            services.AddTransient<UserCreatedIntegratedEventConsumer>();
+            services.AddTransient<UserCreatedIntegratedKEventInKycConsumer>();
             services.AddTransient<TransactionIntegrationMessageConsumer>();
 
             EndpointConvention.Map<ITransactionIntegrationMessage>(new Uri($"queue:{nameof(ITransactionIntegrationMessage)}"));
@@ -73,7 +73,7 @@ namespace Kyc.API.Infrastructure
                     var busControl = EventBusRabbitMq.ConfigureBus(provider);
                     return busControl;
                 });
-                config.AddConsumer<UserCreatedIntegratedEventConsumer>();
+                config.AddConsumer<UserCreatedIntegratedKEventInKycConsumer>();
             });
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Kyc.API.Application.IntegrationEvents
 {
-    public class UserCreatedIntegratedEventConsumer : IConsumer<IUserCreatedIntegrationEvent>
+    public class UserCreatedIntegratedKEventInKycConsumer : IConsumer<IUserCreatedIntegrationEvent>
     {
-        private readonly ILogger<UserCreatedIntegratedEventConsumer> logger;
+        private readonly ILogger<UserCreatedIntegratedKEventInKycConsumer> logger;
         private readonly IUserRepository userRepository;
 
-        public UserCreatedIntegratedEventConsumer(ILogger<UserCreatedIntegratedEventConsumer> logger,
+        public UserCreatedIntegratedKEventInKycConsumer(ILogger<UserCreatedIntegratedKEventInKycConsumer> logger,
             IUserRepository userRepository)
         {
             this.logger = logger;

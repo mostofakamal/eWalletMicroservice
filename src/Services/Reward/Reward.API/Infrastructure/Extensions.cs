@@ -67,7 +67,7 @@ namespace Reward.API.Infrastructure
         {
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<UserCreatedIntegrationEventConsumer>();
+                config.AddConsumer<UserCreatedIntegrationEventInRewardConsumer>();
                 config.AddConsumer<KycApprovedIntegrationEventConsumer>();
                 config.AddBus(provider => EventBusRabbitMq.ConfigureBus(provider));
             });

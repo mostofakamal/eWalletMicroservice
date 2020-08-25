@@ -21,7 +21,7 @@ namespace Kyc.API.Infrastructure
     {
         public static IServiceCollection ConfigureAppServices(this IServiceCollection services, IConfiguration Configuration)
         {
-            services.AddScoped<UserCreatedIntegratedEventConsumer>();
+            services.AddScoped<UserCreatedIntegratedKEventInKycConsumer>();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddScoped<IUserRepository, UserRepository>();
 

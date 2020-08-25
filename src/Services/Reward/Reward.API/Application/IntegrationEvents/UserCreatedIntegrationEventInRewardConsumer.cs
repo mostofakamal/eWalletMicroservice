@@ -6,12 +6,12 @@ using Reward.Domain.AggregateModel;
 
 namespace Reward.API.Application.IntegrationEvents
 {
-    public class UserCreatedIntegrationEventConsumer : IConsumer<IUserCreatedIntegrationEvent>
+    public class UserCreatedIntegrationEventInRewardConsumer : IConsumer<IUserCreatedIntegrationEvent>
     {
-        private readonly ILogger<UserCreatedIntegrationEventConsumer> _logger;
+        private readonly ILogger<UserCreatedIntegrationEventInRewardConsumer> _logger;
         private readonly IUserRepository _userRepository;
 
-        public UserCreatedIntegrationEventConsumer(ILogger<UserCreatedIntegrationEventConsumer> logger, IUserRepository userRepository)
+        public UserCreatedIntegrationEventInRewardConsumer(ILogger<UserCreatedIntegrationEventInRewardConsumer> logger, IUserRepository userRepository)
         {
             this._logger = logger;
             _userRepository = userRepository;

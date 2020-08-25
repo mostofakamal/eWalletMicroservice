@@ -88,7 +88,7 @@ namespace Transaction.API.Infrastructure
         {
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<UserCreatedIntegrationEventConsumer>();
+                config.AddConsumer<UserCreatedIntegrationEventInTransactionConsumer>();
                 config.AddConsumer<KycApprovedIntegrationEventConsumer>();
 
                 config.AddBus(provider => {
