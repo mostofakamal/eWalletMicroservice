@@ -69,7 +69,7 @@ namespace Reward.API.Infrastructure
             {
                 config.AddConsumer<UserCreatedIntegrationEventConsumer>();
                 config.AddConsumer<KycApprovedIntegrationEventConsumer>();
-                config.AddBus(EventBusRabbitMq.ConfigureBus);
+                config.AddBus(provider => EventBusRabbitMq.ConfigureBus(provider));
             });
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());

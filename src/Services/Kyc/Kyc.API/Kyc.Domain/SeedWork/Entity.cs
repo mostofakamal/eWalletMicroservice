@@ -1,9 +1,6 @@
-﻿using Automatonymous;
-using Core.Lib.IntegrationEvents;
-using MediatR;
+﻿using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Kyc.Domain.SeedWork
 {
@@ -17,15 +14,6 @@ namespace Kyc.Domain.SeedWork
         {
             get { return _Id; }
             protected set { _Id = value; }
-        }
-
-        private List<IIntegrationEventPublisher<IItegration>> _integrationEvents;
-        public IReadOnlyCollection<IIntegrationEventPublisher<IItegration>> IntegrationEvents => _integrationEvents?.AsReadOnly();
-
-        public void AddIntegrationEvent(IIntegrationEventPublisher<IItegration> eventPublisher)
-        {
-            _integrationEvents = _integrationEvents ?? new List<IIntegrationEventPublisher<IItegration>>();
-            _integrationEvents.Add(eventPublisher);
         }
 
         public void AddDomainEvent(INotification eventItem)
