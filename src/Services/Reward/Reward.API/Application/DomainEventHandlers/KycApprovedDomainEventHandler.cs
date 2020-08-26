@@ -40,7 +40,7 @@ namespace Reward.API.Application.DomainEventHandlers
                 {
                     Amount = userReward.RewardRule.Amount,
                     ReceiverUserGuid = user.UserIdentityGuid,
-                    SenderUserGuid = user.UserIdentityGuid,
+                    SenderUserGuid = userReward.WalletUser.UserIdentityGuid,
                     TransactionType = TransactionType.Reward.Id
                 };
                 await bus.Send<TransactionIntegrationMessage>(transactionIntegrationMessage);

@@ -95,7 +95,7 @@ namespace Transaction.API.Infrastructure
                     var busControl = EventBusRabbitMq.ConfigureBus(provider, cfg => {
                         cfg.ReceiveEndpoint(nameof(TransactionIntegrationMessage), ep =>
                         {
-                            ep.Consumer<TransactionIntegrationEventConsumer>();
+                            ep.Consumer<TransactionIntegrationEventConsumer>(provider);
                         });
                     });
                     return busControl;
