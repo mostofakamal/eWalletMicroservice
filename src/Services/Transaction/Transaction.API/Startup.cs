@@ -37,7 +37,7 @@ namespace Transaction.API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
 
-            services.AddTransient<TransactionIntegrationEventConsumer>();
+            services.AddScoped<TransactionIntegrationEventConsumer>();
 
             services.ConfigQueue();
             services.AddSwaggerGen(c =>
