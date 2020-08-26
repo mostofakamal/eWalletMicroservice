@@ -41,5 +41,14 @@ services:
     build:
       context: .
       dockerfile: ApiGateways/ApiGateway/Dockerfile
+  rewardservice:
+    image: rewardservice:latest
+    build:
+      context: .
+      dockerfile: Services/Reward/Reward.API/Dockerfile
+    environment:
+      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=reward-db;MultipleActiveResultSets=true;"
+    ports:
+      - 6012:80
 volumes:
   sqlvolume:
