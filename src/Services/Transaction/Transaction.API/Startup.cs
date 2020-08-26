@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Transaction.API.Application.IntegrationEvents;
 using Transaction.API.Infrastructure;
 
 namespace Transaction.API
@@ -35,6 +36,8 @@ namespace Transaction.API
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
+
+            services.AddScoped<TransactionIntegrationEventConsumer>();
 
             services.ConfigQueue();
             services.AddSwaggerGen(c =>

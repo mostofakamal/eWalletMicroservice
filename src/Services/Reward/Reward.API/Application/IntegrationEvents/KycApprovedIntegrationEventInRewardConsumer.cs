@@ -6,25 +6,25 @@ using Reward.Domain.AggregateModel;
 
 namespace Reward.API.Application.IntegrationEvents
 {
-    public class KycApprovedIntegrationEventConsumer : IConsumer<IKycApprovedEvent>
+    public class KycApprovedIntegrationEventInRewardConsumer : IConsumer<KycApprovedIntegrationEvent>
     {
-        private readonly ILogger<IKycApprovedEvent> _logger;
+        private readonly ILogger<KycApprovedIntegrationEvent> _logger;
         private readonly IUserRepository _userRepository;
 
-        public KycApprovedIntegrationEventConsumer(ILogger<IKycApprovedEvent> logger, IUserRepository userRepository)
+        public KycApprovedIntegrationEventInRewardConsumer(ILogger<KycApprovedIntegrationEvent> logger, IUserRepository userRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
         }
 
-        public async Task Consume(ConsumeContext<IKycApprovedEvent> context)
+        public async Task Consume(ConsumeContext<KycApprovedIntegrationEvent> context)
         {
             var kycApprovedEvent = context.Message;
-            _logger.LogInformation($"Consuming {nameof(KycApprovedEvent)} inside reward service..");
+            _logger.LogInformation($"Consuming {nameof(KycApprovedIntegrationEvent)} inside reward service..");
             var user = await _userRepository.GetAsync(kycApprovedEvent.UserId);
             if (user != null)
             {
-                TODO://Do Transaction
+                user.SetUserTransactionEligible();
                 await _userRepository.UnitOfWork.SaveEntitiesAsync();
             }
             else

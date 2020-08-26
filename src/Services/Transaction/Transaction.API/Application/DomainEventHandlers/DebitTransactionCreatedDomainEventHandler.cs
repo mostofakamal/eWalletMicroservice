@@ -21,7 +21,8 @@ namespace Transaction.API.Application.DomainEventHandlers
             var debitIntegrationEvent = new DebitTransactionCreatedIntegrationEvent(notification.Amount,
                 notification.TransactionGuid, notification.SenderUserGuid, notification.ReceiverUserGuid,
                 notification.TransactionType.Name);
-            await _transactionIntegrationDataService.AddAndSaveAsync(debitIntegrationEvent);
+
+            //await _transactionIntegrationDataService.AddAndSaveAsync(debitIntegrationEvent);
         }
     }
 }

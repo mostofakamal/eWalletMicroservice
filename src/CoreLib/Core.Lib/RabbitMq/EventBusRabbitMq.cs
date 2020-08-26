@@ -14,12 +14,13 @@ using Core.Lib.IntegrationEvents;
 using MassTransit.Internals.Extensions;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Core.Lib.RabbitMq
 {
     public static class EventBusRabbitMq
     {
-        public static QueueSettings QueueSettings;
+        public static QueueSettings QueueSettings { get; private set; }
 
         public static IServiceCollection RegisterQueueService(this IServiceCollection services, IConfiguration configuration)
         {
@@ -34,8 +35,6 @@ namespace Core.Lib.RabbitMq
                          h.Username(QueueSettings.UserName);
                          h.Password(QueueSettings.Password);
                      });
-
-                cfg.ExchangeType = ExchangeType.Direct;
             }));
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
@@ -47,18 +46,19 @@ namespace Core.Lib.RabbitMq
             return services;
         }
 
-        public static IBusControl ConfigureBus(IServiceProvider provider)
+        public static IBusControl ConfigureBus(IServiceProvider provider, Action<IRabbitMqBusFactoryConfigurator> config = null)
         {
             var queueSettings = provider.GetRequiredService<QueueSettings>();
 
             var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.Host(queueSettings.HostName, queueSettings.VirtualHost, h =>
+                var host = cfg.Host(queueSettings.HostName, queueSettings.VirtualHost, h =>
                 {
                     h.Username(queueSettings.UserName);
                     h.Password(queueSettings.Password);
                 });
                 cfg.ConfigureEndpoints(provider);
+                if (config != null) config.Invoke(cfg);
             });
             return busControl;
         }

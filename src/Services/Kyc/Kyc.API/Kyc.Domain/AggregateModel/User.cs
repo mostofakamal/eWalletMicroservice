@@ -1,4 +1,5 @@
-﻿using Kyc.Domain.Events;
+﻿using Core.Lib.IntegrationEvents;
+using Kyc.Domain.Events;
 using Kyc.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
@@ -41,11 +42,10 @@ namespace Kyc.Domain.AggregateModel
 
         public void SetVerifiedStatus(short kycVerificationResult)
         {
-            if(kycVerificationResult == (short) KycStatuses.Approved)
+            if (kycVerificationResult == (short)KycStatuses.Approved)
             {
                 IsKycVerified = true;
-
-                //here intergration event should be added
+                AddDomainEvent(new KycVerifiedDomainEvent() { UserId = Id });
             }
         }
     }

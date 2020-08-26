@@ -8,6 +8,8 @@ namespace Reward.Domain.AggregateModel
 {
     public class TransactionType : Enumeration
     {
+        public static TransactionType Transfer = new TransactionType(1, nameof(Transfer));
+        public static TransactionType BillPayment = new TransactionType(2, nameof(BillPayment));
         public static TransactionType Reward = new TransactionType(3, nameof(Reward));
 
         public TransactionType(int id, string name)
@@ -16,7 +18,7 @@ namespace Reward.Domain.AggregateModel
         }
 
         public static IEnumerable<TransactionType> List() =>
-            new[] { Reward };
+            new[] { Transfer, BillPayment, Reward };
 
         public static TransactionType FromName(string name)
         {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Reward.Domain.Events;
 using Reward.Domain.SeedWork;
 
 namespace Reward.Domain.AggregateModel
@@ -13,18 +15,35 @@ namespace Reward.Domain.AggregateModel
 
         public string PhoneNumber { get; private set; }
 
-        public List<UserReward> UserRewards { get; private set;}
+        public bool IsTransactionEligible { get; private set; }
+
+        public bool IsCountryAdmin { get; private set; }
+
+        //[NotMapped]
+        //public int TransactionCount { get; set; }
+
+        //[NotMapped]
+        //public int TransferMoneyCount { get; set; }
+
+        public List<UserReward> UserRewards { get; private set; }
 
         protected User()
         {
         }
 
-        public User(Guid userId, int countryId, string phoneNumber)
+        public User(Guid userId, int countryId, string phoneNumber, bool isTransactionEligible = false, bool isCountryAdmin = false)
         {
             UserIdentityGuid = userId;
             CountryId = countryId;
             PhoneNumber = phoneNumber;
+            IsTransactionEligible = isTransactionEligible;
+            IsCountryAdmin = isCountryAdmin;
         }
 
+        public void SetUserTransactionEligible()
+        {
+            this.IsTransactionEligible = true;
+            AddDomainEvent(new KycApprovedDomainEvent() { UserId = this.UserIdentityGuid });
+        }
     }
 }

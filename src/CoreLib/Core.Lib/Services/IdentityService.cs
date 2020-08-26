@@ -14,6 +14,7 @@ namespace Core.Lib.Services
 
         public string GetUserIdentity()
         {
+            if (_context.HttpContext.User == null) throw new UnauthorizedAccessException();
             return _context.HttpContext.User.FindFirst("sub").Value;
         }
 

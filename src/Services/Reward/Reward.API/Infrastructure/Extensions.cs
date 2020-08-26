@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Core.Lib.IntegrationEvents;
 using Core.Lib.Middlewares.Exceptions;
 using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
+using Core.Services;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +29,7 @@ namespace Reward.API.Infrastructure
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRewardService, UserRewardService>();
+            services.AddScoped<IRewardService, RewardService>();
             return services;
         }
     }
@@ -65,9 +69,9 @@ namespace Reward.API.Infrastructure
         {
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<UserCreatedIntegrationEventConsumer>();
-                config.AddConsumer<KycApprovedIntegrationEventConsumer>();
-                config.AddBus(EventBusRabbitMq.ConfigureBus);
+                config.AddConsumer<UserCreatedIntegrationEventInRewardConsumer>();
+                config.AddConsumer<KycApprovedIntegrationEventInRewardConsumer>();
+                config.AddBus(provider => EventBusRabbitMq.ConfigureBus(provider));
             });
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
@@ -75,6 +79,7 @@ namespace Reward.API.Infrastructure
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IHostedService, EventBusHostedService>();
             services.AddSingleton<IEventPublisher, EventPublisher>();
+            EndpointConvention.Map<TransactionIntegrationMessage>(new Uri($"queue:{nameof(TransactionIntegrationMessage)}"));
             return services;
         }
     }

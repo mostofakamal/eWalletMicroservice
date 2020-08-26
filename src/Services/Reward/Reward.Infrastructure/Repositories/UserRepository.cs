@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Reward.Domain.AggregateModel;
 using Reward.Domain.SeedWork;
+using System.Collections.Generic;
 
 namespace Reward.Infrastructure.Repositories
 {
@@ -51,6 +52,8 @@ namespace Reward.Infrastructure.Repositories
             var user = await _context
                 .Users
                 .Include(x => x.UserRewards)
+                    .ThenInclude(_=>_.RewardRule)
+                        .ThenInclude(r => r.Operation)
                 //.ThenInclude(x=>x.TransactionType)
                 //.Include(x => x.Transactions).ThenInclude(x => x.TransactionStatus)
                 .FirstOrDefaultAsync(o => o.UserIdentityGuid == userIdentityGuid);
@@ -69,6 +72,16 @@ namespace Reward.Infrastructure.Repositories
             }
 
             return user;
+        }
+
+        public async Task<User> GetCountryWalletAdmin(int countryId)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.IsCountryAdmin && u.CountryId == countryId);
+        }
+
+        public async Task<IList<RewardRule>> GetRewardRules()
+        {
+            return await _context.RewardRules.ToListAsync();
         }
     }
 }

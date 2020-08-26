@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Lib.IntegrationEvents
 {
-    public class KycApprovedEvent : IKycApprovedEvent
+    public class KycApprovedIntegrationEvent : IntegrationEvent
     {
         public Guid UserId { get ; set ; }
     }

@@ -1,6 +1,7 @@
-﻿using Core.Lib.RabbitMq;
+﻿using Core.Lib.IntegrationEvents;
+using Core.Lib.RabbitMq;
 using Core.Lib.RabbitMq.Abstractions;
-using Core.Lib.Repository;
+using IntegrationDataLog;
 using Kyc.API.Application.IntegrationEvents;
 using Kyc.Domain.AggregateModel;
 using Kyc.Insfrastructure;
@@ -10,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Reflection;
 
 namespace Kyc.API.Infrastructure
 {
@@ -24,7 +27,25 @@ namespace Kyc.API.Infrastructure
                    b.MigrationsAssembly("Kyc.API");
                    //b.EnableRetryOnFailure(5);
                }));
+            //services.AddDbContext<IntegrationDataLogContext>(options =>
+            //{
+            //    options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+            //        sqlServerOptionsAction: sqlOptions =>
+            //        {
+            //            sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+            //            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            //        });
+            //});
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddDbContext<IntegrationDataLogContext>(options =>
+            {
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    });
+            });
             return services;
         }
 
@@ -33,17 +54,26 @@ namespace Kyc.API.Infrastructure
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetRequiredService<UserContext>().Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<IntegrationDataLogContext>().Database.Migrate();
             }
-
             return app;
         }
 
         public static IServiceCollection ConfigQueue(this IServiceCollection services)
         {
+            services.AddTransient<UserCreatedIntegratedKEventInKycConsumer>();
+            services.AddTransient<TransactionIntegrationMessageConsumer>();
+
+            EndpointConvention.Map<ITransactionIntegrationMessage>(new Uri($"queue:{nameof(ITransactionIntegrationMessage)}"));
+
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<UserCreatedIntegratedEventConsumer>();
-                config.AddBus(EventBusRabbitMq.ConfigureBus);
+                config.AddBus(provider =>
+                {
+                    var busControl = EventBusRabbitMq.ConfigureBus(provider);
+                    return busControl;
+                });
+                config.AddConsumer<UserCreatedIntegratedKEventInKycConsumer>();
             });
 
             services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());

@@ -29,7 +29,6 @@
   <ItemGroup>
     <Folder Include="Application\Behaviours\" />
     <Folder Include="Application\Commands\" />
-    <Folder Include="Application\DomainEventHandlers\" />
     <Folder Include="Application\Queries\" />
     <Folder Include="Infrastructure\Migrations\" />
   </ItemGroup>

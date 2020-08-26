@@ -14,24 +14,24 @@
     <PackageReference Include="MediatR" Version="8.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\CoreLib\Core.Lib\Core.Lib.csproj" />
+    <ProjectReference Include="..\..\..\..\CoreLib\IntegrationDataLog\IntegrationDataLog.csproj" />
     <ProjectReference Include="..\Kyc.Domain\Kyc.Domain.csproj" />
     <ProjectReference Include="..\Kyc.Insfrastructure\Kyc.Insfrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\DomainEventHandlers\" />
     <Folder Include="Infrastructure\Migrations\" />
   </ItemGroup>
 </Project>

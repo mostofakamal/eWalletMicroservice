@@ -1,4 +1,5 @@
-﻿using Kyc.API.Application.Commands;
+﻿using Core.Lib.IntegrationEvents;
+using Kyc.API.Application.Commands;
 using Kyc.Domain.AggregateModel;
 using Kyc.Domain.Exceptions;
 using System;
@@ -13,7 +14,9 @@ namespace Kyc.API.Application.Services
         private readonly IUserRepository userRepository;
         private readonly IExternalKycVerifier externalKycVerifier;
 
-        public KycVerificationService(IUserRepository userRepository, IExternalKycVerifier externalKycVerifier)
+        public KycVerificationService(IUserRepository userRepository, 
+            IExternalKycVerifier externalKycVerifier
+            )
         {
             this.userRepository = userRepository;
             this.externalKycVerifier = externalKycVerifier;
@@ -46,7 +49,7 @@ namespace Kyc.API.Application.Services
             currentUser.AddKyc(kycInformation);
             currentUser.SetVerifiedStatus((short)kycVerificationResult);
             userRepository.Update(currentUser);
-            await userRepository.UnitOfWork.SaveChangesAsync();
+            await userRepository.UnitOfWork.SaveEntitiesAsync();
 
             return kycVerificationResult;
         }

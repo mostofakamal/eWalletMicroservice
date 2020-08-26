@@ -17,29 +17,22 @@ namespace Kyc.API.Application.Commands
     {
         private readonly IIdentityService identityService;
         private readonly IKycVerificationService kycVerificationService;
-        private readonly KycApprovedEventPublisher eventPublisher;
+        private readonly IKycIntegrationDataService kycIntegrationDataService;
+
         public SubmitKycCommandHandler(
             IIdentityService identityService,
             IKycVerificationService kycVerificationService,
-            KycApprovedEventPublisher eventPublisher)
+            IKycIntegrationDataService kycIntegrationDataService)
         {
             this.identityService = identityService;
             this.kycVerificationService = kycVerificationService;
-            this.eventPublisher = eventPublisher;
+            this.kycIntegrationDataService = kycIntegrationDataService;
         }
 
         public async Task<SumitKycResponse> Handle(SubmitKycCommand request, CancellationToken cancellationToken)
         {
             var userId = Guid.Parse(identityService.GetUserIdentity());
             var kyStatus = await this.kycVerificationService.SumitKycAsync(request, userId);
-
-            if (kyStatus == KycStatuses.Approved)
-            {
-                eventPublisher.PublishIntegrationEvent(new KycApprovedEvent
-                {
-                    UserId = userId
-                });
-            }
 
             return new SumitKycResponse() { KycStatus = kyStatus.ToString() };
         }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Reward.Infrastructure;
 
 namespace Reward.API.Infrastructure.Migrations
 {
     [DbContext(typeof(RewardContext))]
-    partial class RewardContextModelSnapshot : ModelSnapshot
+    [Migration("20200825090611_TransactionEligibleAndIsCountryAdminColAdded")]
+    partial class TransactionEligibleAndIsCountryAdminColAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,7 +84,7 @@ namespace Reward.API.Infrastructure.Migrations
 
                     b.HasIndex("OperationId");
 
-                    b.ToTable("RewardRules");
+                    b.ToTable("RewardRule");
 
                     b.HasData(
                         new
@@ -92,8 +94,8 @@ namespace Reward.API.Infrastructure.Migrations
                             IsEnabled = true,
                             OperationId = 1,
                             RequiredMinOccurance = 1,
-                            ValidFrom = new DateTime(2020, 8, 25, 10, 54, 43, 801, DateTimeKind.Utc).AddTicks(8143),
-                            ValidTo = new DateTime(2020, 9, 25, 10, 54, 43, 801, DateTimeKind.Utc).AddTicks(9292)
+                            ValidFrom = new DateTime(2020, 8, 25, 9, 6, 10, 795, DateTimeKind.Utc).AddTicks(8966),
+                            ValidTo = new DateTime(2020, 9, 25, 9, 6, 10, 795, DateTimeKind.Utc).AddTicks(9490)
                         },
                         new
                         {
@@ -102,8 +104,8 @@ namespace Reward.API.Infrastructure.Migrations
                             IsEnabled = true,
                             OperationId = 2,
                             RequiredMinOccurance = 2,
-                            ValidFrom = new DateTime(2020, 8, 25, 10, 54, 43, 802, DateTimeKind.Utc).AddTicks(787),
-                            ValidTo = new DateTime(2020, 10, 25, 10, 54, 43, 802, DateTimeKind.Utc).AddTicks(816)
+                            ValidFrom = new DateTime(2020, 8, 25, 9, 6, 10, 796, DateTimeKind.Utc).AddTicks(137),
+                            ValidTo = new DateTime(2020, 10, 25, 9, 6, 10, 796, DateTimeKind.Utc).AddTicks(148)
                         },
                         new
                         {
@@ -112,8 +114,8 @@ namespace Reward.API.Infrastructure.Migrations
                             IsEnabled = true,
                             OperationId = 3,
                             RequiredMinOccurance = 1,
-                            ValidFrom = new DateTime(2020, 8, 25, 10, 54, 43, 802, DateTimeKind.Utc).AddTicks(863),
-                            ValidTo = new DateTime(2020, 10, 25, 10, 54, 43, 802, DateTimeKind.Utc).AddTicks(866)
+                            ValidFrom = new DateTime(2020, 8, 25, 9, 6, 10, 796, DateTimeKind.Utc).AddTicks(174),
+                            ValidTo = new DateTime(2020, 10, 25, 9, 6, 10, 796, DateTimeKind.Utc).AddTicks(175)
                         });
                 });
 
@@ -132,16 +134,6 @@ namespace Reward.API.Infrastructure.Migrations
                     b.ToTable("TransactionType");
 
                     b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Transfer"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "BillPayment"
-                        },
                         new
                         {
                             Id = 3,
@@ -192,16 +184,11 @@ namespace Reward.API.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WalletUserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RewardRuleId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("WalletUserId");
 
                     b.ToTable("UserRewards");
                 });
@@ -227,12 +214,6 @@ namespace Reward.API.Infrastructure.Migrations
                         .WithMany("UserRewards")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Reward.Domain.AggregateModel.User", "WalletUser")
-                        .WithMany()
-                        .HasForeignKey("WalletUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
