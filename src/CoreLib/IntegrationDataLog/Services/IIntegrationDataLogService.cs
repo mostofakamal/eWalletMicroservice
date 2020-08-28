@@ -13,5 +13,6 @@ namespace IntegrationDataLog.Services
         Task MarkDataAsPublishedAsync(Guid eventId);
         Task MarkDataAsInProgressAsync(Guid eventId);
         Task MarkDataAsFailedAsync(Guid eventId);
+        Task SaveIntegrationDataAsync(IList<IntegrationData> dataItems, IDbContextTransaction transaction);
     }
 }

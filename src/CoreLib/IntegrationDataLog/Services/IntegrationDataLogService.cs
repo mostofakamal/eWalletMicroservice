@@ -27,9 +27,9 @@ namespace IntegrationDataLog.Services
                     .UseSqlServer(_dbConnection)
                     .Options);
 
-            _eventTypes = Assembly.Load(typeof(IntegrationEvent).Assembly.FullName)
+            _eventTypes = Assembly.Load(typeof(IntegrationData).Assembly.FullName)
                 .GetTypes()
-                .Where(t => t.Name.EndsWith(nameof(IntegrationEvent)))
+                //.Where(t => t.Name.EndsWith(nameof(IntegrationEvent)))
                 .ToList();
         }
 
@@ -60,6 +60,24 @@ namespace IntegrationDataLog.Services
 
             return _integrationDataLogContext.SaveChangesAsync();
         }
+
+        public Task SaveIntegrationDataAsync(IList<IntegrationData> dataItems, IDbContextTransaction transaction)
+        {
+            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+
+            IList<IntegrationDataLogEntry> eventLogEntries = new List<IntegrationDataLogEntry>();
+            foreach (var data in dataItems)
+            {
+                eventLogEntries.Add(new IntegrationDataLogEntry(data, transaction.TransactionId));
+            }
+       
+
+            _integrationDataLogContext.Database.UseTransaction(transaction.GetDbTransaction());
+            _integrationDataLogContext.IntegrationDataLogs.AddRange(eventLogEntries);
+
+            return _integrationDataLogContext.SaveChangesAsync();
+        }
+
 
         public Task MarkDataAsPublishedAsync(Guid eventId)
         {

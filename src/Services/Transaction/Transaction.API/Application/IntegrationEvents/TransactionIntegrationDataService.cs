@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Core.Lib.IntegrationEvents;
@@ -77,6 +78,13 @@ namespace Transaction.API.Application.IntegrationEvents
             _logger.LogInformation("----- Enqueuing integration data {IntegrationDataId} to repository ({@IntegrationData})", data.Id, data);
 
             await _dataLogService.SaveIntegrationDataAsync(data, _transactionContext.GetCurrentTransaction());
+        }
+
+        public async Task AddAndSaveAsync(IList<IntegrationData> integrationDataItems)
+        {
+           // _logger.LogInformation("----- Enqueuing integration data {IntegrationDataId} to repository ({@IntegrationData})", data.Id, data);
+           await _dataLogService.SaveIntegrationDataAsync(integrationDataItems, _transactionContext.GetCurrentTransaction());
+
         }
     }
 }
