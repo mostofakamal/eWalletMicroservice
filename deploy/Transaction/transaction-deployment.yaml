@@ -29,7 +29,7 @@ spec:
             - name: ConnectionStrings_DefaultConnection
               valueFrom:
                 secretKeyRef:
-                  name: transactiondb
+                  name: ewalletdb
                   key: DbConnectionString
 
             - name: QueueSettings_HostName

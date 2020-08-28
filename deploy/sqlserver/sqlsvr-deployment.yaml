@@ -4,24 +4,24 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: kycservicedbdeployment
+  name: sqlserverdeployment
   namespace: ewallet
 
 spec:
   selector:
     matchLabels:
-      app: kycservicedbdeployment
+      app: sqlserverdeployment
   replicas: 1
 
   template:
     metadata:
       labels:
-        app: kycservicedbdeployment
+        app: sqlserverdeployment
     spec:
       terminationGracePeriodSeconds: 10
 
       containers:
-        - name: kycservice-db
+        - name: ewallet-db
 
           image: microsoft/mssql-server-linux:2017-latest
 
@@ -37,11 +37,11 @@ spec:
 
               valueFrom:
                 secretKeyRef:
-                  name: kycsrvicedb
+                  name: ewalletdb
                   key: SA_PASSWORD
 
       volumes:
-        - name: kycservice-db-persistent-storage
+        - name: sql-db-persistent-storage
           persistentVolumeClaim:
-            claimName: kycservice-db-data-claim
+            claimName: sqlserver-db-data-claim
       restartPolicy: Always

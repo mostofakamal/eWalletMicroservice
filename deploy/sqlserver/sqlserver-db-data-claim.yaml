@@ -1,0 +1,16 @@
+kind: PersistentVolumeClaim
+
+apiVersion: v1
+
+metadata:
+
+  name: sqlserver-db-data-claim
+  namespace: ewallet
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem

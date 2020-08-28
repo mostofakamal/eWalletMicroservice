@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kycservice-deployment
+  name: rewardservice-deployment
   namespace: ewallet
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kycservice
+      app: rewardservice
   template:
     metadata:
       labels:
-        app: kycservice
+        app: rewardservice
     spec:
       containers:
-        - name: kycservice
-          image: kycservice:latest
+        - name: rewardservice
+          image: rewardservice:latest
           imagePullPolicy: IfNotPresent
           resources:
             limits:
