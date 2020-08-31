@@ -2,7 +2,7 @@ Param(
     [parameter(Mandatory=$true)][string]$namespace
 )
 
-#kubectl apply -f sqlserver/secret.yaml --namespace $namespace
+# kubectl apply -f sqlserver/secret.yaml --namespace $namespace
 # kubectl apply -f sqlserver/sqlserver-db-data-claim.yaml --namespace $namespace
 # kubectl apply -f sqlserver/sqlsvr-sqlsvr-deployment.yaml --namespace $namespace
 # kubectl apply -f sqlserver/sqlsvr-service.yaml --namespace $namespace
