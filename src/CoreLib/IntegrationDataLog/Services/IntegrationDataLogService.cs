@@ -63,16 +63,19 @@ namespace IntegrationDataLog.Services
 
         public Task SaveIntegrationDataAsync(IList<IntegrationData> dataItems, IDbContextTransaction transaction)
         {
-            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+           // if (transaction == null) throw new ArgumentNullException(nameof(transaction));
 
             IList<IntegrationDataLogEntry> eventLogEntries = new List<IntegrationDataLogEntry>();
             foreach (var data in dataItems)
             {
-                eventLogEntries.Add(new IntegrationDataLogEntry(data, transaction.TransactionId));
+                eventLogEntries.Add(new IntegrationDataLogEntry(data, transaction?.TransactionId ?? Guid.NewGuid()));
             }
-       
 
-            _integrationDataLogContext.Database.UseTransaction(transaction.GetDbTransaction());
+            if (transaction != null)
+            {
+                _integrationDataLogContext.Database.UseTransaction(transaction.GetDbTransaction());
+            }
+
             _integrationDataLogContext.IntegrationDataLogs.AddRange(eventLogEntries);
 
             return _integrationDataLogContext.SaveChangesAsync();

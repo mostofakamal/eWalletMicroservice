@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ewallet-db-ex
+  namespace: ewallet
+spec:
+  selector:
+    app: sqlserverdeployment
+  ports:
+    - protocol: TCP
+      port: 2509
+      targetPort: 1433
+  type: LoadBalancer
