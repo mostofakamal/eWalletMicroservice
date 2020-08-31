@@ -43,7 +43,7 @@ namespace Reward.Domain.AggregateModel
         public void SetUserTransactionEligible()
         {
             this.IsTransactionEligible = true;
-            AddDomainEvent(new KycApprovedDomainEvent() { UserId = this.UserIdentityGuid });
+            AddDomainEvent(new KycApprovedRewardProcessingDomainEvent() { UserId = this.UserIdentityGuid });
         }
     }
 }

@@ -22,9 +22,13 @@ namespace Core.Services
                 var isCustomerEligibleForReward = await eligibilityDetector.IsEligible(customer);
                 if (isCustomerEligibleForReward)
                 {
-                    // Create Reward Transaction
                     var walletAdminCustomer =
                         await _repository.GetCountryWalletAdmin(customer.CountryId);
+
+                    if (walletAdminCustomer == null)
+                    {
+                        return null;
+                    }
 
                     var userReward = new UserReward
                     {
@@ -37,7 +41,7 @@ namespace Core.Services
                     return userReward;
                 }
             }
-            return default(UserReward);
+            return null;
         }
 
         private RewardEligibilityDetector GetEligibilityDetector(RewardOperation operationName)

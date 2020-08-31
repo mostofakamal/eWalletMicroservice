@@ -1,15 +1,10 @@
-﻿using Kyc.Domain.AggregateModel;
-using MediatR;
-using Microsoft.AspNetCore.Mvc.Formatters;
+﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Lib.Services;
 using Kyc.API.Application.Services;
 using Kyc.API.Application.IntegrationEvents;
-using Core.Lib.IntegrationEvents;
 
 namespace Kyc.API.Application.Commands
 {

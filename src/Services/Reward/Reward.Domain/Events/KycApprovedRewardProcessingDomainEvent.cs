@@ -3,8 +3,9 @@ using System;
 
 namespace Reward.Domain.Events
 {
-    public class KycApprovedDomainEvent : INotification
+    public class KycApprovedRewardProcessingDomainEvent : INotification
     {
         public Guid UserId { get; set; }
+
     }
 }
