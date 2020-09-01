@@ -25,6 +25,7 @@ namespace Reward.Infrastructure.Repositories
 
         public async Task<User> GetAsync(string phoneNumber)
         {
+
             var user = await _context
                 .Users
                 .Include(x => x.UserRewards)
@@ -74,7 +75,7 @@ namespace Reward.Infrastructure.Repositories
             return user;
         }
 
-        public async Task<User> GetCountryWalletAdmin(int countryId)
+        public async Task<User> GetCountryAdminAsync(int countryId)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.IsCountryAdmin && u.CountryId == countryId);
         }

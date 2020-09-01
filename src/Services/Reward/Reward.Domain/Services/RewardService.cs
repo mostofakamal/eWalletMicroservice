@@ -23,7 +23,7 @@ namespace Core.Services
                 if (isCustomerEligibleForReward)
                 {
                     var walletAdminCustomer =
-                        await _repository.GetCountryWalletAdmin(customer.CountryId);
+                        await _repository.GetCountryAdminAsync(customer.CountryId);
 
                     if (walletAdminCustomer == null)
                     {
