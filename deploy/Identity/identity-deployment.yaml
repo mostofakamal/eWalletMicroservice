@@ -27,10 +27,7 @@ spec:
           
           env:
             - name: ConnectionStrings_DefaultConnection
-              valueFrom:
-                secretKeyRef:
-                  name: ewalletdb
-                  key: DbConnectionString
+              value: Server=ewallet-db,80;Database=AuthServer;User=sa;Password=Password!2;MultipleActiveResultSets=true;
 
             - name: QueueSettings_HostName
               value: rabbit-release-rabbitmq
@@ -43,3 +40,4 @@ spec:
                 secretKeyRef:
                   name: rabbit-release-rabbitmq
                   key: rabbitmq-password
+            

@@ -8,6 +8,6 @@ spec:
     app: sqlserverdeployment
   ports:
     - protocol: TCP
-      port: 2509
+      port: 5000
       targetPort: 1433
   type: LoadBalancer

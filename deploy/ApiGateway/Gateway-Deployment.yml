@@ -22,4 +22,6 @@ spec:
               cpu: "100m"
           ports:
             - containerPort: 80
-
+          env:
+             - name: IdentityServerUrl
+               value: http://identityserver-app.ewallet.svc.cluster.local:5010

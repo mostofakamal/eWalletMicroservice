@@ -39,3 +39,7 @@ spec:
                     secretKeyRef:
                       name: rabbit-release-rabbitmq
                       key: rabbitmq-password
+                - name:  NIDServerUrl
+                  value: http://nidserver:80
+                - name: IdentityServerUrl
+                  value: http://identityserver-app.ewallet.svc.cluster.local:5010
