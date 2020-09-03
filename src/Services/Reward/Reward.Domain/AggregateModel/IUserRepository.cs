@@ -10,7 +10,7 @@ namespace Reward.Domain.AggregateModel
         User Add(User user);
         Task<User> GetAsync(Guid userIdentityGuid);
         Task<User> GetAsync(string phoneNumber);
+        Task<User> GetCountryAdminAsync(int countryId);
         Task<IList<RewardRule>> GetRewardRules();
-        Task<User> GetCountryWalletAdmin(int countryId);
     }
 }

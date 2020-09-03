@@ -29,9 +29,10 @@ namespace Reward.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new UserRewardConfiguration());
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfigurations());
             modelBuilder.ApplyConfiguration(new TransactionTypeEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new UserRewardConfiguration());
+          
             modelBuilder.ApplyConfiguration(new RewardRuleConfiguration());
             modelBuilder.ApplyConfiguration(new RewardOperationConfiguration());
             modelBuilder.ApplyConfiguration(new UserRewardStatusConfiguration());

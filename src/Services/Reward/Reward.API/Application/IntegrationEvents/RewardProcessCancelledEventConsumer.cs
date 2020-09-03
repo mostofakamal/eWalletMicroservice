@@ -23,6 +23,7 @@ namespace Reward.API.Application.IntegrationEvents
             var rewardProcessCancelledEventMessage = context.Message;
             _logger.LogInformation($"Consuming {nameof(RewardProcessCancelledEvent)} with correlationId: {rewardProcessCancelledEventMessage.CorrelationId} and FailedReason: {rewardProcessCancelledEventMessage.Reason}");
             var user= await _userRepository.GetAsync(rewardProcessCancelledEventMessage.ReceiverUserGuid);
+            _logger.LogInformation($"User rewardcount: "+ user.UserRewards.Count());
             user.UpdateUserRewardStatusForReward(rewardProcessCancelledEventMessage.CorrelationId, UserRewardStatus.TransactionFailed);
             await _userRepository.UnitOfWork.SaveEntitiesAsync();
         }

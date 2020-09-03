@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Reward.Domain.AggregateModel;
+using Reward.Domain.Exceptions;
 
 namespace Core.Services
 {
@@ -13,31 +15,32 @@ namespace Core.Services
             _repository = repository;
         }
 
-        public async Task<UserReward> CheckAndProcessReward(User customer, RewardOperation operationName)
+        public async Task<RewardRule> GetRewardRule(User user, RewardOperation operationName)
         {
             var eligibilityDetector = GetEligibilityDetector(operationName);
             var rewardRule = await eligibilityDetector.GetRewardRule();
-            if (rewardRule != null)
+
+            var operation = rewardRule.Operation;
+
+            if (rewardRule == null) throw new RewardNotConfiguredException($"Reward is not configured for {operation.Name}");
+
+            var isCustomerEligibleForReward = await eligibilityDetector.IsEligible(user);
+
+            if (!isCustomerEligibleForReward)
             {
-                var isCustomerEligibleForReward = await eligibilityDetector.IsEligible(customer);
-                if (isCustomerEligibleForReward)
-                {
-                    // Create Reward Transaction
-                    var walletAdminCustomer =
-                        await _repository.GetCountryWalletAdmin(customer.CountryId);
-
-                    var userReward = new UserReward
-                    {
-                        User = customer,
-                        RewardRule = rewardRule,
-                        ReceivedOn = DateTime.UtcNow,
-                        WalletUser = walletAdminCustomer,
-                    };
-
-                    return userReward;
-                }
+                throw new UserIsNotEligibleForRewardException($"User is not eligible for reward for {operation.Name}");
             }
-            return default(UserReward);
+
+            return rewardRule;
+        }
+
+        public async Task<User> GetCountryAdmin(User user)
+        {
+            var walletAdminCustomer = await _repository.GetCountryAdminAsync(user.CountryId);
+
+            if (walletAdminCustomer == null) throw new RewardNotConfiguredException($"Country admin is not configured");
+
+            return walletAdminCustomer;
         }
 
         private RewardEligibilityDetector GetEligibilityDetector(RewardOperation operationName)

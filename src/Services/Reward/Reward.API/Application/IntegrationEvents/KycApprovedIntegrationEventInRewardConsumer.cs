@@ -2,36 +2,28 @@
 using Core.Lib.IntegrationEvents;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using Reward.Domain.AggregateModel;
+using Reward.API.Application.Commands;
 
 namespace Reward.API.Application.IntegrationEvents
 {
     public class KycApprovedIntegrationEventInRewardConsumer : IConsumer<KycApprovedIntegrationEvent>
     {
         private readonly ILogger<KycApprovedIntegrationEvent> _logger;
-        private readonly IUserRepository _userRepository;
+        private readonly MediatR.IMediator _mediator;
 
-        public KycApprovedIntegrationEventInRewardConsumer(ILogger<KycApprovedIntegrationEvent> logger, IUserRepository userRepository)
+        public KycApprovedIntegrationEventInRewardConsumer(
+             ILogger<KycApprovedIntegrationEvent> logger,
+             MediatR.IMediator mediator)
         {
             _logger = logger;
-            _userRepository = userRepository;
+            this._mediator = mediator;
         }
 
         public async Task Consume(ConsumeContext<KycApprovedIntegrationEvent> context)
         {
             var kycApprovedEvent = context.Message;
             _logger.LogInformation($"Consuming {nameof(KycApprovedIntegrationEvent)} inside reward service..");
-            var user = await _userRepository.GetAsync(kycApprovedEvent.UserId);
-            if (user != null)
-            {
-                user.SetUserTransactionEligible();
-                await _userRepository.UnitOfWork.SaveEntitiesAsync();
-            }
-            else
-            {
-                _logger.LogWarning($"User with Id:  {kycApprovedEvent.UserId} does not exist in reward service");
-            }
-           
+            await this._mediator.Send<bool>(new ProcessRewardForKyc() { UserId = kycApprovedEvent.UserId });
         }
     }
 }

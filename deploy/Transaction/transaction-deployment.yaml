@@ -24,22 +24,23 @@ spec:
           ports:
             - name: http
               containerPort: 80
-          
-          env:
-            - name: ConnectionStrings_DefaultConnection
-              valueFrom:
-                secretKeyRef:
-                  name: ewalletdb
-                  key: DbConnectionString
 
-            - name: QueueSettings_HostName
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              value: Server=ewallet-db,80;Database=Transaction;User=sa;Password=Password!2;MultipleActiveResultSets=true;
+
+            - name: QueueSettings__HostName
               value: rabbit-release-rabbitmq
-            - name: QueueSettings_VirtualHost
+            - name: QueueSettings__VirtualHost
               value: /
-            - name: QueueSettings_UserName
+            - name: QueueSettings__UserName
               value: user
-            - name: QueueSettings_Password
+            - name: QueueSettings__Password
               valueFrom:
                 secretKeyRef:
                   name: rabbit-release-rabbitmq
                   key: rabbitmq-password
+            - name: NIDServerUrl
+              value: http://nidserver:80
+            - name: IdentityServerUrl
+              value: http://identityserver-app.ewallet.svc.cluster.local:5010

@@ -25,19 +25,19 @@ spec:
             - name: http
               containerPort: 80
           env:
-                - name: ConnectionStrings_DefaultConnection
+                - name: ConnectionStrings__DefaultConnection
                   valueFrom:
                     secretKeyRef:
                       name: ewalletdb
                       key: DbConnectionString
 
-                - name: QueueSettings_HostName
+                - name: QueueSettings__HostName
                   value: rabbit-release-rabbitmq
-                - name: QueueSettings_VirtualHost
+                - name: QueueSettings__VirtualHost
                   value: /
-                - name: QueueSettings_UserName
+                - name: QueueSettings__UserName
                   value: user
-                - name: QueueSettings_Password
+                - name: QueueSettings__Password
                   valueFrom:
                     secretKeyRef:
                       name: rabbit-release-rabbitmq

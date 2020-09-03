@@ -25,10 +25,13 @@ namespace Reward.Domain.AggregateModel
         //[NotMapped]
         //public int TransferMoneyCount { get; set; }
 
-        public List<UserReward> UserRewards { get; private set; }
+        private readonly List<UserReward> _userRewards;
+
+        public IEnumerable<UserReward> UserRewards => _userRewards.AsReadOnly();
 
         protected User()
         {
+            _userRewards = new List<UserReward>();
         }
 
         public User(Guid userId, int countryId, string phoneNumber, bool isTransactionEligible = false, bool isCountryAdmin = false)
@@ -40,10 +43,18 @@ namespace Reward.Domain.AggregateModel
             IsCountryAdmin = isCountryAdmin;
         }
 
-        public void SetUserTransactionEligible()
+        public void EnableTransactionEligibility()
         {
             this.IsTransactionEligible = true;
-            AddDomainEvent(new KycApprovedDomainEvent() { UserId = this.UserIdentityGuid });
+        }
+
+        public void AddUserReward(RewardRule rewardRule, User countryAdmin)
+        {
+            var userReward = new UserReward(this,countryAdmin,rewardRule);
+            _userRewards.Add(userReward);
+            var userRewardDomainEvent = new UserRewardAddedDomainEvent(userReward.User.UserIdentityGuid,
+                userReward.WalletUser.UserIdentityGuid, userReward.RewardRule.Amount,userReward.RewardGuid);
+            AddDomainEvent(userRewardDomainEvent);
         }
 
         public void UpdateUserRewardStatusForReward(Guid rewardGuid, UserRewardStatus newStatus)

@@ -15,9 +15,7 @@ namespace Reward.Infrastructure.EntityConfigurations
 
             var navigation = builder.Metadata.FindNavigation(nameof(User.UserRewards));
 
-            // DDD Patterns comment:
-            //Set as field (New since EF 1.1) to access the Transactions collection property through its field
-            //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }
