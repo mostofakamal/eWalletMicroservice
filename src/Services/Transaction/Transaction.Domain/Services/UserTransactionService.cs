@@ -18,23 +18,23 @@ namespace Transaction.Domain.Services
         {
             var senderUser = await _userRepository.GetAsync(senderUserGuid);
             var receiverUser = await _userRepository.GetAsync(receiverPhoneNumber);
-            return await PerformTransactionCore(amount, TransactionType.Transfer, senderUser, receiverUser);
+            return await PerformTransactionCore(amount, TransactionType.Transfer, senderUser, receiverUser,Guid.NewGuid());
         }
 
         public async Task<Guid> DoTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
-            TransactionType transactionType)
+            TransactionType transactionType,Guid correlationId)
         {
             var senderUser = await _userRepository.GetAsync(senderUserGuid);
             var receiverUser = await _userRepository.GetAsync(receiverUserGuid);
-            return await PerformTransactionCore(amount, transactionType, senderUser, receiverUser);
+            return await PerformTransactionCore(amount, transactionType, senderUser, receiverUser,correlationId);
         }
 
         private async Task<Guid> PerformTransactionCore(decimal amount,
-            TransactionType transactionType, User senderUser, User receiverUser)
+            TransactionType transactionType, User senderUser, User receiverUser,Guid correlationId)
         {
             CheckPreconditions(senderUser, receiverUser);
             // Debit transaction from sender
-            var debitTransactionId = senderUser.CreateDebitTransaction(amount, receiverUser, transactionType);
+            var debitTransactionId = senderUser.CreateDebitTransaction(amount, receiverUser, transactionType,correlationId);
             // Credit transaction to receiver
             receiverUser.CreateCreditTransaction(amount, senderUser, transactionType);
             await _userRepository.UnitOfWork.SaveEntitiesAsync();

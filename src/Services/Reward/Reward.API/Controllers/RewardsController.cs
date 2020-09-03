@@ -4,6 +4,7 @@ using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using IMediator = MediatR.IMediator;
 
 namespace Reward.API.Controllers
 {
@@ -22,10 +23,5 @@ namespace Reward.API.Controllers
             this.bus = bus;
         }
 
-        [HttpGet]
-        public void Send()
-        {
-            bus.Send<TransactionIntegrationMessage>(new TransactionIntegrationMessage() { Amount = 1 });
-        }
     }
 }

@@ -16,13 +16,16 @@ namespace Transaction.Domain.Events
 
         public TransactionType TransactionType { get; }
 
-        public DebitTransactionCreatedDomainEvent(decimal amount,Guid senderUserGuid,Guid receiverUserGuid,TransactionType type,Guid transactionId)
+        public Guid CorrelationId { get; }
+
+        public DebitTransactionCreatedDomainEvent(decimal amount,Guid senderUserGuid,Guid receiverUserGuid,TransactionType type,Guid transactionId,Guid correlationId)
         {
             Amount = amount;
             SenderUserGuid = senderUserGuid;
             ReceiverUserGuid = receiverUserGuid;
             TransactionType = type;
             TransactionGuid = transactionId;
+            CorrelationId = correlationId;
         }
 
     }

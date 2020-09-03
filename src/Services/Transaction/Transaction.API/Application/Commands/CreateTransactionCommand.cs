@@ -15,5 +15,7 @@ namespace Transaction.API.Application.Commands
 
         public int TransactionType { get; set; }
 
+        public Guid CorrelationId { get; set; }
+
     }
 }

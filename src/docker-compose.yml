@@ -50,5 +50,13 @@ services:
       ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=reward-db;MultipleActiveResultSets=true;"
     ports:
       - 6012:80
+  ewalletsaga:
+    image: ewalletsaga:latest
+    build:
+      context: .
+      dockerfile: Services/Sagas/ewallet.Sagas/ewallet.SagaStateMachine/Dockerfile
+    environment:
+      ConnectionStrings:DefaultConnection: "Data Source=wallet-db;database=reward-db;MultipleActiveResultSets=true;"
+ 
 volumes:
   sqlvolume:

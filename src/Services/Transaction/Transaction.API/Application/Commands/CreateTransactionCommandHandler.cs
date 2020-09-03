@@ -22,7 +22,7 @@ namespace Transaction.API.Application.Commands
         {
             _logger.LogInformation($"Doing transaction of Type {TransactionType.From(request.TransactionType).Name} of amount: {request.Amount} from {request.SenderUserGuid} to {request.ReceiverUserGuid}");
             var transactionId = await _userTransactionService.DoTransaction(request.Amount, request.SenderUserGuid,
-                request.ReceiverUserGuid, TransactionType.From(request.TransactionType));
+                request.ReceiverUserGuid, TransactionType.From(request.TransactionType),request.CorrelationId);
             return new TransactionResponse
             {
                 TransactionId = transactionId

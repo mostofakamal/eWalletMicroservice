@@ -24,7 +24,7 @@ namespace Transaction.API.Application.DomainEventHandlers
         {
             var debitIntegrationEvent = new DebitTransactionCreatedIntegrationEvent(notification.Amount,
                 notification.TransactionGuid, notification.SenderUserGuid, notification.ReceiverUserGuid,
-                notification.TransactionType.Name);
+                notification.TransactionType.Name,notification.CorrelationId);
 
             var user = await _userRepository.GetAsync(notification.SenderUserGuid);
             var smsText =

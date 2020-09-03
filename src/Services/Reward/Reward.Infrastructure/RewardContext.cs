@@ -34,6 +34,7 @@ namespace Reward.Infrastructure
             modelBuilder.ApplyConfiguration(new UserRewardConfiguration());
             modelBuilder.ApplyConfiguration(new RewardRuleConfiguration());
             modelBuilder.ApplyConfiguration(new RewardOperationConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRewardStatusConfiguration());
         }
 
         private IDbContextTransaction _currentTransaction;

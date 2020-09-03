@@ -31,7 +31,7 @@ namespace Core.Services
                         User = customer,
                         RewardRule = rewardRule,
                         ReceivedOn = DateTime.UtcNow,
-                        WalletUser = walletAdminCustomer
+                        WalletUser = walletAdminCustomer,
                     };
 
                     return userReward;

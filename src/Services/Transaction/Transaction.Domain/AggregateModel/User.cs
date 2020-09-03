@@ -39,7 +39,7 @@ namespace Transaction.Domain.AggregateModel
             return this;
         }
 
-        public Guid CreateDebitTransaction(decimal amount, User counterPartyUser, TransactionType type)
+        public Guid CreateDebitTransaction(decimal amount, User counterPartyUser, TransactionType type, Guid correlationId)
         {
             if (!CanDebit(amount))
             {
@@ -50,7 +50,7 @@ namespace Transaction.Domain.AggregateModel
             var transaction = new Transaction(-amount, counterPartyUser.UserIdentityGuid, type, description);
             _transactions.Add(transaction);
             AddDomainEvent(new DebitTransactionCreatedDomainEvent(amount, UserIdentityGuid, counterPartyUser.UserIdentityGuid,
-                type, transaction.TransactionGuid));
+                type, transaction.TransactionGuid,correlationId));
             return transaction.TransactionGuid;
         }
 

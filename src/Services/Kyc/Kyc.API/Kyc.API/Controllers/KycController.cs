@@ -18,14 +18,14 @@ namespace Kyc.API.Controllers
     public class KycController : ControllerBase
     {
         private readonly ILogger<KycController> _logger;
-        private readonly IMediator mediator;
+        private readonly MediatR.IMediator mediator;
         private readonly ISendEndpointProvider sendEndpointProvider;
         private readonly IBus _bus;
         private readonly IBusControl control;
 
         public KycController(ILogger<KycController> logger,
             IBus bus,
-            IMediator mediator,
+            MediatR.IMediator mediator,
             ISendEndpointProvider sendEndpointProvider,
             IBusControl control)
         {
@@ -56,7 +56,7 @@ namespace Kyc.API.Controllers
         {
             var amount = new Random().Next();
             //var sendEndpioint = await this.control.GetSendEndpoint(new Uri("queue:TransactionIntegrationMessage"));
-            await _bus.Publish<ITransactionIntegrationMessage>(new TransactionIntegrationMessage() { Amount = amount });
+           // await _bus.Publish<ITransactionIntegrationMessage>(new TransactionIntegrationMessage() { Amount = amount });
             return Ok(amount);
         }
     }

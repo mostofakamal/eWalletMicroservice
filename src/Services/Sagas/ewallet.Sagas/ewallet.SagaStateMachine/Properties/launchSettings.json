@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ewallet.SagaStateMachine": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
