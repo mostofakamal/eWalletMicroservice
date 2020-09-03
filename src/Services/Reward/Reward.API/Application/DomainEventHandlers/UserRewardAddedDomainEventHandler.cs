@@ -22,7 +22,7 @@ namespace Reward.API.Application.DomainEventHandlers
 
         public async Task Handle(UserRewardAddedDomainEvent notification, CancellationToken cancellationToken)
         {
-            var rewardProcessStarted = new RewardProcessStartedEvent(notification.Amount, notification.UserId, notification.CountryAdminId, TransactionType.Reward.Id, notification.UserRewardGuid);
+            var rewardProcessStarted = new RewardProcessStartedEvent(notification.Amount,notification.CountryAdminId, notification.UserId, TransactionType.Reward.Id, notification.UserRewardGuid);
             _logger.LogInformation($"Saving rewardProcessStarted event with correlation Id: {rewardProcessStarted.CorrelationId} Amount: {rewardProcessStarted.Amount} Sender: {rewardProcessStarted.SenderUserGuid} Receiver : {rewardProcessStarted.ReceiverUserGuid}");
             await this._transactionIntegrationDataService.AddAndSaveAsync(rewardProcessStarted);
         }
