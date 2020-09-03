@@ -5,6 +5,7 @@ namespace Core.Services
 {
     public interface IRewardService
     {
-        Task<UserReward> CheckAndProcessReward(User customer,RewardOperation operationName);
+        Task<RewardRule> GetRewardRule(User user, RewardOperation operationName);
+        Task<User> GetCountryAdmin(User user);
     }
 }
