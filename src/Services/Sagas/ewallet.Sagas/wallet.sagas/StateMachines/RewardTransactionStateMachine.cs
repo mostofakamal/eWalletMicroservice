@@ -32,14 +32,22 @@ namespace wallet.sagas.core.StateMachines
                     .TransitionTo(ProcessStarted)
                     .Send(context => new TransactionIntegrationMessage(context.Data.Amount, context.Data.SenderUserGuid,
                                     context.Data.ReceiverUserGuid, 3, context.Data.CorrelationId))
+                    .Catch<Exception>(e=>e.Then(x =>
+                    {
+                        Console.WriteLine("An exception occured. Error details: "+ x.Exception.Message);
+                    }))
                    );
 
 
 
             During(ProcessStarted,
                 When(TransactionFailedEvent)
-                    .Then(context => context.Instance.RequestCancelledOn =
-                        DateTime.Now)
+                    .Then(context =>
+                    {
+                        context.Instance.RequestCancelledOn =
+                            DateTime.Now;
+                        context.Instance.TransactionFailedReason = context.Data.FailedReason;
+                    })
                     .TransitionTo(ProcessCancelled)
                     .Publish(context => new RewardProcessCancelledEvent(context.Data.Amount, context.Data.SenderUserGuid, context.Data.ReceiverUserGuid, context.Data.CorrelationId,context.Data.FailedReason))
 

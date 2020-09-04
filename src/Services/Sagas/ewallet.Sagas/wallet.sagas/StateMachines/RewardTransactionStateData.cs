@@ -20,6 +20,8 @@ namespace wallet.sagas.core.StateMachines
 
         public DateTime? RequestCompletedOn { get; set; }
 
+        public string  TransactionFailedReason{ get; set; }
+
 
     }
 }
