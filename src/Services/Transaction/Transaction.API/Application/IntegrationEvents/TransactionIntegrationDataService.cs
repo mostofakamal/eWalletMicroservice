@@ -35,25 +35,39 @@ namespace Transaction.API.Application.IntegrationEvents
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        public async Task PublishAllPending()
+        {
+            var pendingLogData = await _dataLogService.RetrieveAllIntegrationDataLogsPendingToPublishAsync();
+            await PublishPending(pendingLogData);
+        }
         public async Task Publish(Guid transactionId)
         {
             var pendingLogData = await _dataLogService.RetrieveIntegrationDataLogsPendingToPublishAsync(transactionId);
 
+            await PublishPending(pendingLogData);
+        }
+
+        private async Task PublishPending(IEnumerable<IntegrationDataLogEntry> pendingLogData)
+        {
             foreach (var logData in pendingLogData)
             {
-                _logger.LogInformation("----- Publishing integration data: {IntegrationEventId} from TransactionService - ({@IntegrationData})", logData.IntegrationDataId, logData.IntegrationData);
+                _logger.LogInformation(
+                    "----- Publishing integration data: {IntegrationEventId} from TransactionService - ({@IntegrationData})",
+                    logData.IntegrationDataId, logData.IntegrationData);
 
                 try
                 {
                     await _dataLogService.MarkDataAsInProgressAsync(logData.IntegrationDataId);
                     var messageType = typeof(IntegrationEvent).Assembly.GetType(logData.DataTypeName);
-                    _logger.LogInformation($"Message type name: {logData.DataTypeName} and type: {messageType} and DataType: {logData.IntegrationDataType}");
+                    _logger.LogInformation(
+                        $"Message type name: {logData.DataTypeName} and type: {messageType} and DataType: {logData.IntegrationDataType}");
                     await SendOrPublishDataToQueue(logData, messageType);
                     await _dataLogService.MarkDataAsPublishedAsync(logData.IntegrationDataId);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "ERROR publishing integration data: {IntegrationEventId} from TransactionService", logData.IntegrationDataId);
+                    _logger.LogError(ex, "ERROR publishing integration data: {IntegrationEventId} from TransactionService",
+                        logData.IntegrationDataId);
 
                     await _dataLogService.MarkDataAsFailedAsync(logData.IntegrationDataId);
                 }

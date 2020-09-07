@@ -52,11 +52,20 @@ namespace Transaction.API.Application.IntegrationEvents
                 {
                     failedReason = ex.Message;
                 }
+
+                if (transactionEvent.ScheduleAndRetryIfFailed)
+                {
+                    await _userTransactionService.AddPendingTransaction(transactionEvent.Amount,
+                        transactionEvent.SenderUserGuid, transactionEvent.ReceiverUserGuid,
+                        transactionEvent.TransactionType, transactionEvent.CorrelationId);
+                }
+
                 var transactionFailedException = new TransactionFailedIntegrationEvent(transactionEvent.Amount,
                     transactionEvent.SenderUserGuid, transactionEvent.ReceiverUserGuid,
                     transactionEvent.TransactionType, transactionEvent.CorrelationId,failedReason);
                 await _transactionIntegrationDataService.AddAndSaveAsync(transactionFailedException);
             }
+
             return Unit.Value;
         }
     }

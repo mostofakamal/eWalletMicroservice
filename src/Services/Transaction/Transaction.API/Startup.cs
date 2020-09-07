@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Transaction.API.Application.BackgroundServices;
 using Transaction.API.Application.IntegrationEvents;
 using Transaction.API.Infrastructure;
 
@@ -48,6 +49,8 @@ namespace Transaction.API
             services.RegisterDbAccess(Configuration);
 
             services.ConfigureAppServices();
+            
+            services.AddHostedService<PendingTransactionHandlerService>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

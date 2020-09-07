@@ -10,5 +10,6 @@ namespace Transaction.API.Application.IntegrationEvents
         Task Publish(Guid transactionId);
         Task AddAndSaveAsync(IntegrationData data);
         Task AddAndSaveAsync(IList<IntegrationData> integrationDataItems);
+        Task PublishAllPending();
     }
 }

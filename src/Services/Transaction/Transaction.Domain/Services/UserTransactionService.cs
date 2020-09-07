@@ -29,6 +29,16 @@ namespace Transaction.Domain.Services
             return await PerformTransactionCore(amount, transactionType, senderUser, receiverUser,correlationId);
         }
 
+        public async Task AddPendingTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
+            int type,Guid correlationId)
+        {
+            var senderUser = await _userRepository.GetAsync(senderUserGuid);
+            var receiverUser = await _userRepository.GetAsync(receiverUserGuid);
+            var pendingTransaction = new PendingTransaction(amount,senderUser.Id,receiverUser.Id,TransactionType.From(type), correlationId);
+            _userRepository.AddPendingTransaction(pendingTransaction);
+            await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        }
+
         private async Task<Guid> PerformTransactionCore(decimal amount,
             TransactionType transactionType, User senderUser, User receiverUser,Guid correlationId)
         {

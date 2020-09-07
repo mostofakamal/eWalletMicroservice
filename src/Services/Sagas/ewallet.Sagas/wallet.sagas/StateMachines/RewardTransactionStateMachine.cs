@@ -31,7 +31,7 @@ namespace wallet.sagas.core.StateMachines
 
                     .TransitionTo(ProcessStarted)
                     .Send(context => new TransactionIntegrationMessage(context.Data.Amount, context.Data.SenderUserGuid,
-                                    context.Data.ReceiverUserGuid, 3, context.Data.CorrelationId))
+                                    context.Data.ReceiverUserGuid, 3, context.Data.CorrelationId,true))
                     .Catch<Exception>(e=>e.Then(x =>
                     {
                         Console.WriteLine("An exception occured. Error details: "+ x.Exception.Message);
@@ -63,6 +63,18 @@ namespace wallet.sagas.core.StateMachines
                     })
                     .TransitionTo(ProcessCompleted)
                     .Publish(context => new RewardProcessCompletedEvent(context.Data.CorrelationId,context.Data.ReceiverUserGuid))
+
+            );
+            During(ProcessCancelled,
+                When(DebitTransactionCreatedEvent)
+                    .Then(context =>
+                    {
+                        Console.WriteLine($"Debit transaction created with correlationId: {context.Data.CorrelationId} and Amount: {context.Data.Amount}");
+                        context.Instance.RequestCompletedOn =
+                            DateTime.Now;
+                    })
+                    .TransitionTo(ProcessCompleted)
+                    .Publish(context => new RewardProcessCompletedEvent(context.Data.CorrelationId, context.Data.ReceiverUserGuid))
 
             );
 

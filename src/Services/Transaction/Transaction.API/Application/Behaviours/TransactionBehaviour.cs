@@ -34,6 +34,7 @@ namespace Transaction.API.Application.Behaviours
             {
                 if (_dbContext.HasActiveTransaction)
                 {
+                    _logger.LogWarning("Context has active transaction!!");
                     return await next();
                 }
 

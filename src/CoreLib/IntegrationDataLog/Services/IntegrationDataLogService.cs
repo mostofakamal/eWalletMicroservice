@@ -33,6 +33,20 @@ namespace IntegrationDataLog.Services
                 .ToList();
         }
 
+
+        public async Task<IEnumerable<IntegrationDataLogEntry>> RetrieveAllIntegrationDataLogsPendingToPublishAsync()
+        {
+            var result = await _integrationDataLogContext.IntegrationDataLogs
+                .Where(e => e.State == IntegrationDataStateEnum.NotPublished).ToListAsync();
+
+            if (result != null && result.Any())
+            {
+                return result.OrderBy(o => o.CreationTime)
+                    .Select(e => e.DeserializeJsonContent(_eventTypes.Find(t => t.Name == e.EventTypeShortName)));
+            }
+
+            return new List<IntegrationDataLogEntry>();
+        }
         public async Task<IEnumerable<IntegrationDataLogEntry>> RetrieveIntegrationDataLogsPendingToPublishAsync(Guid transactionId)
         {
             var tid = transactionId.ToString();

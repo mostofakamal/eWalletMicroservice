@@ -10,5 +10,8 @@ namespace Transaction.Domain.Services
             TransactionType transactionType,Guid correlaionId);
 
         Task<Guid> TransferMoney(decimal amount, Guid senderUserGuid, string receiverPhoneNumber);
+
+        Task AddPendingTransaction(decimal amount, Guid senderUserGuid, Guid receiverUserGuid,
+            int type,Guid correlationId);
     }
 }

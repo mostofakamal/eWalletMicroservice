@@ -19,6 +19,8 @@ namespace Transaction.Infrastructure
 
         public DbSet<Domain.AggregateModel.Transaction> Transactions { get; set; }
 
+        public DbSet<PendingTransaction> PendingTransactions { get; set; }
+
 
         public TransactionContext(DbContextOptions<TransactionContext> options, IMediator mediator) : base(options)
         {
@@ -34,6 +36,7 @@ namespace Transaction.Infrastructure
             modelBuilder.ApplyConfiguration(new TransactionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionTypeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PendingTransactionEntityTypeConfiguration());
 
         }
 
