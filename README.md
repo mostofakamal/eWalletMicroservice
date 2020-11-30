@@ -1,6 +1,6 @@
 # Introduction 
 
-This project is an implementation of Microservice architecture of e-Wallet project.  It demonstrates how to design Bounded context , communication among different microservices,
+This project is an implementation of Microservice architecture of e-Wallet project.  It demonstrates how to design Bounded context , communication among different microservices with Integration events , based on a change or action of a specific context how to raise domain events, how to ensure data consistency using Saga pattern,
 fault tolerance etc.
 
 It has the following Microservice:
